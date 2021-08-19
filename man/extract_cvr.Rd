@@ -4,7 +4,7 @@
 \alias{extract_cvr}
 \title{Extract tabular data from Dominion CVR}
 \usage{
-extract_cvr(cvr = NULL, path = NULL)
+extract_cvr(cvr = NULL, path = NULL, verbose = TRUE)
 }
 \arguments{
 \item{cvr, path}{The data. Use \code{cvr} for a list output from \code{jsonlite::fromJSON},
@@ -14,6 +14,9 @@ or use \code{path} to give the \code{fromJSON} path directly.}
 Extract tabular data from Dominion CVR
 }
 \examples{
- extract_cvr(path = "data-raw/json/CvrExport_42.json")
+
+ library(furrr)
+ plan("multicore")
+ extract_cvr(path = c("data-raw/json/CvrExport_42.json", "data-raw/json/CvrExport_24940.json"))
 
 }
