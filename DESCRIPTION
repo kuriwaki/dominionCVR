@@ -1,13 +1,20 @@
 Package: dominionCVR
-Title: What the Package Does (One Line, Title Case)
+Title: Read and Format Cast Vote Records from Dominion Voting Machines
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+  c(
+    person(given = "Shiro",
+           family = "Kuriwaki",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "shirokuriwaki@gmail.com",
+           comment = c(ORCID = "0000-0002-5687-2647")),
+    person(given = "Jeffrey",
+           family = "Lewis",
+           role = "aut")
+Description: Dominion voting machines, used in many places such as Arizona,
+ Orange County, CA, and San Francisco Couty, CA, export their cast vote records
+ in JSON format. This R package provides a common interface to read such data 
+ files into tabular form. 
 License: MIT + file LICENSE
 Suggests: 
     testthat (>= 3.0.0)
