@@ -1,3 +1,4 @@
-## code to prepare `DATASET` dataset goes here
+library(jsonlite)
+library(tidyverse)
 
-usethis::use_data(DATASET, overwrite = TRUE)
+
