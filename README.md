@@ -34,7 +34,32 @@ library(tidyverse)
 library(jsonlite)
 ```
 
-## Manifest Files
+## Usage
+
+Currently there is a simple function to read from a JSON file:
+
+``` r
+extract_cvr(path = "data-raw/json/CvrExport_42.json")
+#> # A tibble: 1,082 × 19
+#>    precinct ballotType tabulator batch recordId countyGroupId sessionType
+#>       <int>      <int>     <int> <int>    <int>         <int> <chr>      
+#>  1      157         51        21    20       88             2 ScannedVote
+#>  2      157         51        21    20       88             2 ScannedVote
+#>  3      157         51        21    20       88             2 ScannedVote
+#>  4      157         51        21    20       88             2 ScannedVote
+#>  5      157         51        21    20       88             2 ScannedVote
+#>  6      157         51        21    20       88             2 ScannedVote
+#>  7      157         51        21    20       88             2 ScannedVote
+#>  8      157         51        21    20       88             2 ScannedVote
+#>  9      157         51        21    20       88             2 ScannedVote
+#> 10      157         51        21    20       88             2 ScannedVote
+#> # … with 1,072 more rows, and 12 more variables: votingSessionId <chr>,
+#> #   uniqueVotingIdentifer <chr>, cardId <int>, paperIndex <int>,
+#> #   contestId <int>, overvotes <int>, undervotes <int>, candidateID <int>,
+#> #   rank <int>, mdens <int>, isambig <lgl>, isvote <lgl>
+```
+
+## Inside Manifest Files
 
 Metadata about the contests are stored in Manifest files, e.g. for
 contests
@@ -78,7 +103,7 @@ fromJSON("data-raw/json/CandidateManifest.json")$List %>%
 #> # … with 129 more rows
 ```
 
-## CVR Exports
+## Inside CVR Exports
 
 Each CVR export is a hierarchical data format.
 

@@ -43,8 +43,17 @@ library(tidyverse)
 library(jsonlite)
 ```
 
+## Usage
 
-## Manifest Files
+Currently there is a simple function to read from a JSON file:
+
+```{r}
+extract_cvr(path = "data-raw/json/CvrExport_42.json")
+```
+
+
+
+## Inside Manifest Files
 
 Metadata about the contests are stored in Manifest files, e.g. for contests
 
@@ -61,7 +70,7 @@ fromJSON("data-raw/json/CandidateManifest.json")$List %>%
 ```
 
 
-## CVR Exports
+## Inside CVR Exports
 
 Each CVR export is a hierarchical data format. 
 
