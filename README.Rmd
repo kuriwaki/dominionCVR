@@ -15,13 +15,14 @@ knitr::opts_chunk$set(
 
 # dominionCVR
 
+**Shiro Kuriwaki** and **Jeff Lewis**
+
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![CRAN status](https://www.r-pkg.org/badges/version/dominionCVR)](https://CRAN.R-project.org/package=dominionCVR)
 <!-- badges: end -->
 
-The goal of dominionCVR is to ...
-
+Dominion voting machines, used in many places such as Arizona, Orange County, CA, and San Francisco Couty, CA, export their cast vote records in JSON format. This R package provides a common interface to read such data files into tabular form. 
+ 
+ 
 ## Installation
 
 You can install the released version of dominionCVR from [CRAN](https://CRAN.R-project.org) with:
@@ -30,27 +31,115 @@ You can install the released version of dominionCVR from [CRAN](https://CRAN.R-p
 install.packages("dominionCVR")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
+## Package and Dependencies
 
 ```{r example}
 library(dominionCVR)
-## basic example code
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
 
-```{r cars}
-summary(cars)
+```{r, message=FALSE}
+library(tidyverse)
+library(jsonlite)
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.
 
-You can also embed plots, for example:
+## Manifest Files
 
-```{r pressure, echo = FALSE}
-plot(pressure)
+Metadata about the contests are stored in Manifest files, e.g. for contests
+
+
+```{r}
+fromJSON("data-raw/json/ContestManifest.json")$List %>% as_tibble()
 ```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+and candidates in those contests
+
+```{r}
+fromJSON("data-raw/json/CandidateManifest.json")$List %>% 
+  as_tibble()
+```
+
+
+## CVR Exports
+
+Each CVR export is a hierarchical data format. 
+
+```{r}
+cvr <- fromJSON("data-raw/json/CvrExport_42.json") 
+
+cvr %>% str(max.level = 3, vec.len = 2)
+```
+
+
+The key parts in this top level output is `Sessions$Orignal$Cards`. 
+
+`Orignal` includes the ballot data as taken. Each session includes cards for the ballots.
+
+Each card includes contests. Here we take the 49th card.
+
+```{r}
+length(cvr$Sessions$Original$Cards)
+
+# First card
+cvr$Sessions$Original$Cards[[49]] %>% str(max.level = 2)
+```
+
+
+Each contest is identified by a _Contest ID_.    
+
+```{r}
+cvr$Sessions$Original$Cards[[49]]$Contests[[1]] %>% 
+  as_tibble()
+```
+
+Each contest ID in a card has itself a table of Marks. A contests' mark is read into R as a list of row-1 dataframes. 
+
+```{r}
+cvr$Sessions$Original$Cards[[49]]$Contests[[1]]$Marks %>% str(list.len = 2)
+```
+
+Therefore this list can be stacked into a table. 
+
+
+```{r}
+votes <- cvr$Sessions$Original$Cards[[49]]$Contests[[1]]$Marks %>% 
+  bind_rows()
+
+as_tibble(votes)
+```
+
+
+Here we finally get to the real part. `IsVote = TRUE`  means that the mark is a vote for the candidate. We can merge this with the candidate metadata to who these candidates are. 
+
+
+
+
+```{r}
+# make contest data
+cont_df <- fromJSON("data-raw/json/ContestManifest.json")$List %>% 
+  rename_all(~ str_c("Contest", .x)) %>% 
+  as_tibble()
+
+# merge with candidate data
+cand_df <- cont_df %>% 
+  select(ContestDescription, ContestId) %>% 
+  left_join(fromJSON("data-raw/json/CandidateManifest.json")$List, by = "ContestId") %>% 
+  as_tibble()
+```
+
+
+```{r}
+labels <- select(cand_df, 
+                 contest = ContestDescription, 
+                 candidate = Description, 
+                 CandidateId = Id)
+
+votes %>% 
+  # add name to candidate
+  left_join(labels, by = "CandidateId") %>% 
+  relocate(contest, candidate, IsVote) %>% 
+  as_tibble()
+```
+
+
