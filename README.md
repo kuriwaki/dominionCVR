@@ -40,20 +40,48 @@ Currently there is a simple function to read from a JSON file:
 
 ``` r
 extract_cvr(path = "data-raw/json/CvrExport_42.json")
-#> # A tibble: 1,082 × 19
-#>    precinct ballotType tabulator batch recordId countyGroupId sessionType
-#>       <int>      <int>     <int> <int>    <int>         <int> <chr>      
-#>  1      157         51        21    20       88             2 ScannedVote
-#>  2      157         51        21    20       88             2 ScannedVote
-#>  3      157         51        21    20       88             2 ScannedVote
-#>  4      157         51        21    20       88             2 ScannedVote
-#>  5      157         51        21    20       88             2 ScannedVote
-#>  6      157         51        21    20       88             2 ScannedVote
-#>  7      157         51        21    20       88             2 ScannedVote
-#>  8      157         51        21    20       88             2 ScannedVote
-#>  9      157         51        21    20       88             2 ScannedVote
-#> 10      157         51        21    20       88             2 ScannedVote
+#> # A tibble: 1,082 × 20
+#>    file   precinct ballotType tabulator batch recordId countyGroupId sessionType
+#>    <chr>     <int>      <int>     <int> <int>    <int>         <int> <chr>      
+#>  1 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  2 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  3 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  4 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  5 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  6 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  7 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  8 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  9 CvrEx…      157         51        21    20       88             2 ScannedVote
+#> 10 CvrEx…      157         51        21    20       88             2 ScannedVote
 #> # … with 1,072 more rows, and 12 more variables: votingSessionId <chr>,
+#> #   uniqueVotingIdentifer <chr>, cardId <int>, paperIndex <int>,
+#> #   contestId <int>, overvotes <int>, undervotes <int>, candidateID <int>,
+#> #   rank <int>, mdens <int>, isambig <lgl>, isvote <lgl>
+```
+
+It can read multiple files at the same time and run in multicore
+settings
+
+``` r
+library(furrr)
+#> Loading required package: future
+plan("multicore")
+extract_cvr(path = c("data-raw/json/CvrExport_42.json",
+                     "data-raw/json/CvrExport_24940.json"))
+#> # A tibble: 1,126 × 20
+#>    file   precinct ballotType tabulator batch recordId countyGroupId sessionType
+#>    <chr>     <int>      <int>     <int> <int>    <int>         <int> <chr>      
+#>  1 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  2 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  3 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  4 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  5 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  6 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  7 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  8 CvrEx…      157         51        21    20       88             2 ScannedVote
+#>  9 CvrEx…      157         51        21    20       88             2 ScannedVote
+#> 10 CvrEx…      157         51        21    20       88             2 ScannedVote
+#> # … with 1,116 more rows, and 12 more variables: votingSessionId <chr>,
 #> #   uniqueVotingIdentifer <chr>, cardId <int>, paperIndex <int>,
 #> #   contestId <int>, overvotes <int>, undervotes <int>, candidateID <int>,
 #> #   rank <int>, mdens <int>, isambig <lgl>, isvote <lgl>

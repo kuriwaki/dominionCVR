@@ -19,6 +19,11 @@ Description: Dominion voting machines, used in many places such as Arizona,
 License: MIT + file LICENSE
 Depends: 
   jsonlite
+Imports:
+  furrr,
+  purrr,
+  magrittr,
+  fs
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

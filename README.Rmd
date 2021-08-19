@@ -51,6 +51,15 @@ Currently there is a simple function to read from a JSON file:
 extract_cvr(path = "data-raw/json/CvrExport_42.json")
 ```
 
+It can read multiple files at the same time and run in multicore settings
+
+```{r}
+library(furrr)
+plan("multicore")
+extract_cvr(path = c("data-raw/json/CvrExport_42.json",
+                     "data-raw/json/CvrExport_24940.json"))
+```
+
 
 
 ## Inside Manifest Files
