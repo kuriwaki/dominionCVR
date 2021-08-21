@@ -3,11 +3,15 @@
 #'
 #' @param cvr,path The data. Use `cvr` for a list output from `jsonlite::fromJSON`,
 #'  or use `path` to give the `fromJSON` path directly.
+#' @param zipdir if the json files are in a zipped file and you do not want to
+#'  unzip the whole thing, you can list a `zipdir` so that the path `{zipdir}/{path}`
+#'   corresponds to a file. Then the function will extract the file internally.
 #'
 #' @importFrom jsonlite fromJSON
 #' @importFrom purrr map map_dfr
 #' @importFrom furrr future_map_dfr
 #' @importFrom fs path_file
+#' @importFrom tibble tibble
 #' @importFrom magrittr %>%
 #' @examples
 #'
@@ -17,14 +21,19 @@
 #'
 #' @export
 #'
-extract_cvr <- function(cvr = NULL, path = NULL, verbose = TRUE) {
+extract_cvr <- function(path = NULL,  cvr = NULL, zipdir = NULL, verbose = TRUE) {
 
   if (is.null(cvr) & is.null(path))
     stop("Must have an object in `cvr` or a path in `path`")
 
   if (is.null(cvr) & !is.null(path)) {
     cvr <- map(path,
-                ~fromJSON(.x, simplifyDataFrame = FALSE)
+                function(fn, zip = zipdir) {
+                  if (!is.null(zip))
+                    fn <- unz(zip, fn)
+
+                  fromJSON(fn, simplifyDataFrame = FALSE)
+                }
     )
   }
 
