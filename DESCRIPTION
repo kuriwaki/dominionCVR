@@ -23,6 +23,7 @@ Imports:
   furrr,
   purrr,
   magrittr,
+  tibble,
   fs
 Suggests: 
     testthat (>= 3.0.0)
