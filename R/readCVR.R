@@ -5,7 +5,8 @@
 #'  or use `path` to give the `fromJSON` path directly.
 #' @param zipdir if the json files are in a zipped file and you do not want to
 #'  unzip the whole thing, you can list a `zipdir` so that the path `{zipdir}/{path}`
-#'   corresponds to a file. Then the function will extract the file internally.
+#'  corresponds to a file. Then the function will extract the file internally.
+#' @param future Whether to attempt to parallelize across files. Defaults to FALSE.
 #'
 #' @importFrom jsonlite fromJSON
 #' @importFrom purrr map map_dfr
@@ -13,16 +14,21 @@
 #' @importFrom fs path_file
 #' @importFrom tibble tibble
 #' @importFrom magrittr %>%
+#' @importFrom tictoc tic toc
 #' @examples
 #'
+#'  js_files <- c("data-raw/json/CvrExport_42.json", "data-raw/json/CvrExport_24940.json")
 #'  library(furrr)
+#'  extract_cvr(path = js_files)
+#'
 #'  plan("multicore")
-#'  extract_cvr(path = c("data-raw/json/CvrExport_42.json", "data-raw/json/CvrExport_24940.json"))
+#'  extract_cvr(js_files, future = TRUE)
 #'
 #' @export
 #'
-extract_cvr <- function(path = NULL,  cvr = NULL, zipdir = NULL, verbose = TRUE) {
+extract_cvr <- function(path = NULL,  cvr = NULL, zipdir = NULL, future = FALSE, verbose = TRUE) {
 
+  tic()
   if (is.null(cvr) & is.null(path))
     stop("Must have an object in `cvr` or a path in `path`")
 
@@ -42,15 +48,28 @@ extract_cvr <- function(path = NULL,  cvr = NULL, zipdir = NULL, verbose = TRUE)
   names(data) <- fs::path_file(path)
 
   # output
-  future_map_dfr(data,
-                 .extract_from_file,
-                 .id = "file",
-                 .progress = verbose)
+  if (future) {
+    out <- future_map_dfr(data,
+                   .extract_from_file,
+                   .id = "file",
+                   .progress = verbose)
+  }
+
+  if (!future) {
+    out <- map_dfr(data,
+            .extract_from_file,
+            .id = "file",
+            .progress = verbose)
+  }
+
+  toc()
+  cat("\n")
+  return(out)
 }
 
 #' @keywords internal
 .extract_from_file <- function(file) {
-  future_map_dfr(file, ~ .extract_from_session(.x))
+  map_dfr(file, ~ .extract_from_session(.x))
 }
 
 #' @keywords internal

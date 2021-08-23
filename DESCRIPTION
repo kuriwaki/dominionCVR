@@ -24,6 +24,7 @@ Imports:
   purrr,
   magrittr,
   tibble,
+  tictoc,
   fs
 Suggests: 
     testthat (>= 3.0.0)
