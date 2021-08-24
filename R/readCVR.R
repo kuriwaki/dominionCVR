@@ -28,40 +28,42 @@
 #' @export
 #'
 extract_cvr <- function(path = NULL,  cvr = NULL, zipdir = NULL, future = FALSE, verbose = TRUE) {
-
+  if (future) {
+    my_map_dfr <- function(.x, .f) {
+      future_map_dfr(.x,
+                     .f,
+                     .progress = verbose,
+                     .options = furrr_options(seed=TRUE))
+    }
+  }
+  else {
+    my_map_dfr <- map_dfr
+  }
   tic()
   if (is.null(cvr) & is.null(path))
     stop("Must have an object in `cvr` or a path in `path`")
 
   if (is.null(cvr) & !is.null(path)) {
-    cvr <- map(path,
+    out <- my_map_dfr(path,
                 function(fn, zip = zipdir) {
                   if (!is.null(zip))
-                    fn <- read_file_raw(unz(zip, fn))
-
-                  fparse(fn, max_simplify_lvl="list")
+                    the_json <- read_file_raw(unz(zip, fn))
+                  else
+                    the_json <- read_file_raw(fn)
+                  fparse(the_json, max_simplify_lvl="list") %>%
+                    .$Sessions %>%
+                    .extract_from_file() %>%
+                  mutate(file = fs::path_file(fn))
                 }
     )
   }
-
-  # list of cvrExports to list of files (which include sessions)
-  data <- map(cvr, ~ .x$Sessions)
-  names(data) <- fs::path_file(path)
+  else {
+    out <- cvr %>%
+      .$Sessions %>%
+      .extract_from_file()
+  }
 
   # output
-  if (future) {
-    out <- future_map_dfr(data,
-                   .extract_from_file,
-                   .id = "file",
-                   .progress = verbose)
-  }
-
-  if (!future) {
-    out <- map_dfr(data,
-            .extract_from_file,
-            .id = "file")
-  }
-
   toc()
   cat("\n")
   return(out)
