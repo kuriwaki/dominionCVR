@@ -8,13 +8,14 @@
 #'  corresponds to a file. Then the function will extract the file internally.
 #' @param future Whether to attempt to parallelize across files. Defaults to FALSE.
 #'
-#' @importFrom jsonlite fromJSON
+#' @importFrom RcppSimdJson fparse
 #' @importFrom purrr map map_dfr
 #' @importFrom furrr future_map_dfr
 #' @importFrom fs path_file
 #' @importFrom tibble tibble
 #' @importFrom magrittr %>%
 #' @importFrom tictoc tic toc
+#' @importFrom readr read_file_raw
 #' @examples
 #'
 #'  js_files <- c("data-raw/json/CvrExport_42.json", "data-raw/json/CvrExport_24940.json")
@@ -36,9 +37,9 @@ extract_cvr <- function(path = NULL,  cvr = NULL, zipdir = NULL, future = FALSE,
     cvr <- map(path,
                 function(fn, zip = zipdir) {
                   if (!is.null(zip))
-                    fn <- unz(zip, fn)
+                    fn <- read_file_raw(unz(zip, fn))
 
-                  fromJSON(fn, simplifyDataFrame = FALSE)
+                  fparse(fn, max_simplify_lvl="list")
                 }
     )
   }
@@ -58,8 +59,7 @@ extract_cvr <- function(path = NULL,  cvr = NULL, zipdir = NULL, future = FALSE,
   if (!future) {
     out <- map_dfr(data,
             .extract_from_file,
-            .id = "file",
-            .progress = verbose)
+            .id = "file")
   }
 
   toc()
@@ -79,18 +79,19 @@ extract_cvr <- function(path = NULL,  cvr = NULL, zipdir = NULL, future = FALSE,
 
 #' @keywords internal
 .extract_from_card <- function(card, sess) {
-  map_dfr(card$Contests, ~.extract_from_contest(.x, sess, card))
+  map(card$Contests, ~.extract_from_contest(.x, sess, card)) %>%
+    unlist(recursive=FALSE)
 }
 
 #' @keywords internal
 .extract_from_contest <- function(cont, sess, card) {
-    map_dfr(cont$Marks, ~.extract_from_mark(.x, sess, card, cont))
+    map(cont$Marks, ~.extract_from_mark(.x, sess, card, cont))
 }
 
 
 #' @keywords internal
 .extract_from_mark <- function(mark, sess, card, cont) {
-  tibble(
+  list(
     # file_name = fn, # if only path, add the filename
     precinct = sess$Original$PrecinctPortionId,
     ballotType = sess$Original$BallotTypeId,
