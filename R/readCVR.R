@@ -43,24 +43,24 @@ extract_cvr <- function(path = NULL, zipdir = NULL, future = FALSE, verbose = TR
   if (is.null(path))
     stop("Must have a path in `path`")
 
-  if (is.null(cvr) & !is.null(path)) {
-    with_progress({
-      p <- progressor(steps = length(path))
-      out <- my_map_dfr(path,
-                  function(fn, zip = zipdir) {
-                    p()
-                    if (!is.null(zip))
-                      the_json <- read_file_raw(unz(zip, fn))
-                    else
-                      the_json <- read_file_raw(fn)
-                    fparse(the_json, max_simplify_lvl="list") %>%
-                      .$Sessions %>%
-                      .extract_from_file() %>%
-                    mutate(file = fs::path_file(fn))
-                  }
-      )
-    })
-  }
+
+  with_progress({
+    p <- progressor(steps = length(path))
+    out <- my_map_dfr(path,
+                function(fn, zip = zipdir) {
+                  p()
+                  if (!is.null(zip))
+                    the_json <- read_file_raw(unz(zip, fn))
+                  else
+                    the_json <- read_file_raw(fn)
+                  fparse(the_json, max_simplify_lvl="list") %>%
+                    .$Sessions %>%
+                    .extract_from_file() %>%
+                  mutate(file = fs::path_file(fn))
+                }
+    )
+  })
+
   # output
   toc()
   return(out)
