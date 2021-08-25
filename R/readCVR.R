@@ -1,8 +1,8 @@
 #' Extract tabular data from Dominion CVR
 #'
 #'
-#' @param cvr,path The data. Use `cvr` for a list output from `jsonlite::fromJSON`,
-#'  or use `path` to give the `fromJSON` path directly.
+#' @param path The path to data as a vector of strings, typically with a `".json"` file extension.
+#' If the file is within an unzipped zip file, also specify `zipdir`.
 #' @param zipdir if the json files are in a zipped file and you do not want to
 #'  unzip the whole thing, you can list a `zipdir` so that the path `{zipdir}/{path}`
 #'  corresponds to a file. Then the function will extract the file internally.
@@ -27,7 +27,10 @@
 #'
 #' @export
 #'
-extract_cvr <- function(path = NULL,  cvr = NULL, zipdir = NULL, future = FALSE, verbose = TRUE) {
+extract_cvr <- function(path = NULL, zipdir = NULL, future = FALSE, verbose = TRUE) {
+  if (is.null(path))
+    stop("Must have a path in `path`")
+
   if (future) {
     my_map_dfr <- function(.x, .f) {
       future_map_dfr(.x,
@@ -39,29 +42,20 @@ extract_cvr <- function(path = NULL,  cvr = NULL, zipdir = NULL, future = FALSE,
   else {
     my_map_dfr <- map_dfr
   }
-  tic()
-  if (is.null(cvr) & is.null(path))
-    stop("Must have an object in `cvr` or a path in `path`")
 
-  if (is.null(cvr) & !is.null(path)) {
-    out <- my_map_dfr(path,
-                function(fn, zip = zipdir) {
-                  if (!is.null(zip))
-                    the_json <- read_file_raw(unz(zip, fn))
-                  else
-                    the_json <- read_file_raw(fn)
-                  fparse(the_json, max_simplify_lvl="list") %>%
-                    .$Sessions %>%
-                    .extract_from_file() %>%
-                  mutate(file = fs::path_file(fn))
-                }
-    )
-  }
-  else {
-    out <- cvr %>%
-      .$Sessions %>%
-      .extract_from_file()
-  }
+  tic()
+  out <- my_map_dfr(path,
+                    function(fn, zip = zipdir) {
+                      if (!is.null(zip))
+                        the_json <- read_file_raw(unz(zip, fn))
+                      else
+                        the_json <- read_file_raw(fn)
+                      fparse(the_json, max_simplify_lvl="list") %>%
+                        .$Sessions %>%
+                        .extract_from_file() %>%
+                        mutate(file = fs::path_file(fn))
+                    }
+  )
 
   # output
   toc()
@@ -76,7 +70,7 @@ extract_cvr <- function(path = NULL,  cvr = NULL, zipdir = NULL, future = FALSE,
 
 #' @keywords internal
 .extract_from_session <- function(sess) {
-    map_dfr(sess$Original$Cards, ~.extract_from_card(.x, sess))
+  map_dfr(sess$Original$Cards, ~.extract_from_card(.x, sess))
 }
 
 #' @keywords internal
@@ -87,7 +81,7 @@ extract_cvr <- function(path = NULL,  cvr = NULL, zipdir = NULL, future = FALSE,
 
 #' @keywords internal
 .extract_from_contest <- function(cont, sess, card) {
-    map(cont$Marks, ~.extract_from_mark(.x, sess, card, cont))
+  map(cont$Marks, ~.extract_from_mark(.x, sess, card, cont))
 }
 
 

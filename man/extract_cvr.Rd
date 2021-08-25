@@ -4,17 +4,11 @@
 \alias{extract_cvr}
 \title{Extract tabular data from Dominion CVR}
 \usage{
-extract_cvr(
-  path = NULL,
-  cvr = NULL,
-  zipdir = NULL,
-  future = FALSE,
-  verbose = TRUE
-)
+extract_cvr(path = NULL, zipdir = NULL, future = FALSE, verbose = TRUE)
 }
 \arguments{
-\item{cvr, path}{The data. Use \code{cvr} for a list output from \code{jsonlite::fromJSON},
-or use \code{path} to give the \code{fromJSON} path directly.}
+\item{path}{The path to data as a vector of strings, typically with a \code{".json"} file extension.
+If the file is within an unzipped zip file, also specify \code{zipdir}.}
 
 \item{zipdir}{if the json files are in a zipped file and you do not want to
 unzip the whole thing, you can list a \code{zipdir} so that the path \code{{zipdir}/{path}}
