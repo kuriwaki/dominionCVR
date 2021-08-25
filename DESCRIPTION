@@ -17,9 +17,9 @@ Description: Dominion voting machines, used in many places such as Arizona,
  in JSON format. This R package provides a common interface to read such data 
  files into tabular form. 
 License: MIT + file LICENSE
-Depends: 
-  jsonlite
+Depends: RcppSimdJson
 Imports:
+  readr,
   furrr,
   purrr,
   magrittr,

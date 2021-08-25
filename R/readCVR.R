@@ -1,20 +1,22 @@
 #' Extract tabular data from Dominion CVR
 #'
 #'
-#' @param cvr,path The data. Use `cvr` for a list output from `jsonlite::fromJSON`,
-#'  or use `path` to give the `fromJSON` path directly.
+#' @param path The path to data as a vector of strings, typically with a `".json"` file extension.
+#' If the file is within an unzipped zip file, also specify `zipdir`.
 #' @param zipdir if the json files are in a zipped file and you do not want to
 #'  unzip the whole thing, you can list a `zipdir` so that the path `{zipdir}/{path}`
 #'  corresponds to a file. Then the function will extract the file internally.
 #' @param future Whether to attempt to parallelize across files. Defaults to FALSE.
 #'
-#' @importFrom jsonlite fromJSON
-#' @importFrom purrr map map_dfr
-#' @importFrom furrr future_map_dfr
+#' @importFrom RcppSimdJson fparse
+#' @importFrom purrr map map_dfr map
+#' @importFrom furrr future_map_dfr future_map
 #' @importFrom fs path_file
 #' @importFrom tibble tibble
 #' @importFrom magrittr %>%
 #' @importFrom tictoc tic toc
+#' @importFrom readr read_file_raw
+#' @importFrom progressr progressor with_progress
 #' @examples
 #'
 #'  js_files <- c("data-raw/json/CvrExport_42.json", "data-raw/json/CvrExport_24940.json")
@@ -26,44 +28,41 @@
 #'
 #' @export
 #'
-extract_cvr <- function(path = NULL,  cvr = NULL, zipdir = NULL, future = FALSE, verbose = TRUE) {
-
+extract_cvr <- function(path = NULL, zipdir = NULL, future = FALSE, verbose = TRUE) {
+  if (future) {
+    my_map_dfr <- function(.x, .f) {
+      future_map_dfr(.x,
+                     .f,
+                     .options = furrr_options(seed=TRUE))
+    }
+  }
+  else {
+    my_map_dfr <- map_dfr
+  }
   tic()
-  if (is.null(cvr) & is.null(path))
-    stop("Must have an object in `cvr` or a path in `path`")
+  if (is.null(path))
+    stop("Must have a path in `path`")
 
   if (is.null(cvr) & !is.null(path)) {
-    cvr <- map(path,
-                function(fn, zip = zipdir) {
-                  if (!is.null(zip))
-                    fn <- unz(zip, fn)
-
-                  fromJSON(fn, simplifyDataFrame = FALSE)
-                }
-    )
+    with_progress({
+      p <- progressor(steps = length(path))
+      out <- my_map_dfr(path,
+                  function(fn, zip = zipdir) {
+                    p()
+                    if (!is.null(zip))
+                      the_json <- read_file_raw(unz(zip, fn))
+                    else
+                      the_json <- read_file_raw(fn)
+                    fparse(the_json, max_simplify_lvl="list") %>%
+                      .$Sessions %>%
+                      .extract_from_file() %>%
+                    mutate(file = fs::path_file(fn))
+                  }
+      )
+    })
   }
-
-  # list of cvrExports to list of files (which include sessions)
-  data <- map(cvr, ~ .x$Sessions)
-  names(data) <- fs::path_file(path)
-
   # output
-  if (future) {
-    out <- future_map_dfr(data,
-                   .extract_from_file,
-                   .id = "file",
-                   .progress = verbose)
-  }
-
-  if (!future) {
-    out <- map_dfr(data,
-            .extract_from_file,
-            .id = "file",
-            .progress = verbose)
-  }
-
   toc()
-  cat("\n")
   return(out)
 }
 
@@ -74,46 +73,58 @@ extract_cvr <- function(path = NULL,  cvr = NULL, zipdir = NULL, future = FALSE,
 
 #' @keywords internal
 .extract_from_session <- function(sess) {
-    map_dfr(sess$Original$Cards, ~.extract_from_card(.x, sess))
+    # Get "original" marks
+    map_dfr(sess$Original$Cards, ~.extract_from_card(.x)) %>%
+    mutate(
+      originalModified = "O",
+      precinct = sess$Original$PrecinctPortionId,
+      ballotType = sess$Original$BallotTypeId,
+      isCurrent = sess$Original$IsCurrent
+    ) %>%
+    # Add "modified" marks
+    bind_rows(
+      map_dfr(sess$Modified$Cards, ~.extract_from_card(.x)) %>%
+        mutate(
+          originalModified = "M",
+          precinct = sess$Modified$PrecinctPortionId,
+          ballotType = sess$Modified$BallotTypeId,
+          isCurrent = sess$Modified$IsCurrent
+        )) %>%
+    mutate(
+      tabulator = sess$TabulatorId,
+      batch = sess$BatchId,
+      recordId = sess$RecordId,
+      countyGroupId = sess$CountingGroupId,
+      sessionType = sess$SessionType,
+      votingSessionId = sess$VotingSessionIdentifier,
+      uniqueVotingIdentifer = sess$UniqueVotingIdentifier
+    )
 }
 
 #' @keywords internal
-.extract_from_card <- function(card, sess) {
-  map_dfr(card$Contests, ~.extract_from_contest(.x, sess, card))
+.extract_from_card <- function(card) {
+  map(card$Contests, ~.extract_from_contest(.x, card)) %>%
+    unlist(recursive=FALSE)
 }
 
 #' @keywords internal
-.extract_from_contest <- function(cont, sess, card) {
-    map_dfr(cont$Marks, ~.extract_from_mark(.x, sess, card, cont))
+.extract_from_contest <- function(cont, card) {
+    map(cont$Marks, ~.extract_from_mark(.x, card, cont))
 }
 
 
 #' @keywords internal
-.extract_from_mark <- function(mark, sess, card, cont) {
-  tibble(
-    # file_name = fn, # if only path, add the filename
-    precinct = sess$Original$PrecinctPortionId,
-    ballotType = sess$Original$BallotTypeId,
-    tabulator = sess$TabulatorId,
-    batch = sess$BatchId,
-    recordId = sess$RecordId,
-    countyGroupId = sess$CountingGroupId,
-    # #imageMask = sess$ImageMask,
-    sessionType = sess$SessionType,
-    votingSessionId = sess$VotingSessionIdentifier,
-    uniqueVotingIdentifer = sess$UniqueVotingIdentifier,
+.extract_from_mark <- function(mark, card, cont) {
+  list(
     cardId = card$Id,
-    # # keyinId = card$KeyInId,
     paperIndex = card$PaperIndex,
     contestId = cont$Id,
-    # contest = contests[as.character(cont$Id)],
     overvotes = cont$Overvotes,
     undervotes = cont$Undervotes,
-    candidateID = mark$CandidateId,
-    # candidate = cands[as.character(m$CandidateId)],
+    candidateId = mark$CandidateId,
     rank = mark$Rank,
     mdens = mark$MarkDensity,
-    isambig = mark$IsAmbiguous,
-    isvote = mark$IsVote
+    isAmbig = mark$IsAmbiguous,
+    isVote = mark$IsVote
   )
 }
