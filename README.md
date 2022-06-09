@@ -15,12 +15,13 @@ data files into tabular form.
 
 ## Installation
 
-You can install the released version of dominionCVR from
-[CRAN](https://CRAN.R-project.org) with:
+You can install the dev version of dominionCVR from:
 
 ``` r
-install.packages("dominionCVR")
+remotes::install_github("kuriwaki/dominionCVR")
 ```
+
+with a personal authentication token.
 
 ## Package and Dependencies
 
