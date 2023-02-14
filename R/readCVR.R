@@ -109,7 +109,12 @@ extract_cvr <- function(path = NULL, zipdir = NULL, future = FALSE, verbose = TR
 
 #' @keywords internal
 .extract_from_contest <- function(cont, card) {
-    map(cont$Marks, ~.extract_from_mark(.x, card, cont))
+    if (length(cont$Marks) == 0) {
+      mrks <- list(list()) 
+    } else {
+      mrks <- cont$Marks
+    }
+    map(mrks, ~.extract_from_mark(.x, card, cont))
 }
 
 
