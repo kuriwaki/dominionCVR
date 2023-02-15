@@ -40,7 +40,7 @@ Currently there is a simple function to read from a JSON file:
 
 ``` r
 extract_cvr(path = "data-raw/json/CvrExport_42.json")
-#> 4.467 sec elapsed
+#> 4.385 sec elapsed
 #> # A tibble: 1,216 × 22
 #>    cardId paperIndex contes…¹ overv…² under…³ candi…⁴  rank mdens isAmbig isVote
 #>     <int>      <int>    <int>   <int>   <int>   <int> <int> <int> <lgl>   <lgl> 
@@ -56,7 +56,7 @@ extract_cvr(path = "data-raw/json/CvrExport_42.json")
 #> 10   6394          1       27       0       0      78     1    92 FALSE   TRUE  
 #> # … with 1,206 more rows, 12 more variables: originalModified <chr>,
 #> #   precinct <int>, ballotType <int>, isCurrent <lgl>, tabulator <int>,
-#> #   batch <int>, recordId <int>, countyGroupId <int>, sessionType <chr>,
+#> #   batch <int>, recordId <int>, countingGroupId <int>, sessionType <chr>,
 #> #   votingSessionId <chr>, uniqueVotingIdentifer <chr>, file <chr>, and
 #> #   abbreviated variable names ¹​contestId, ²​overvotes, ³​undervotes,
 #> #   ⁴​candidateId
@@ -76,7 +76,7 @@ plan("multicore")
 #> ?parallelly::supportsMulticore
 extract_cvr(path = c("data-raw/json/CvrExport_42.json",
                      "data-raw/json/CvrExport_24940.json"))
-#> 4.341 sec elapsed
+#> 4.484 sec elapsed
 #> # A tibble: 1,384 × 22
 #>    cardId paperIndex contes…¹ overv…² under…³ candi…⁴  rank mdens isAmbig isVote
 #>     <int>      <int>    <int>   <int>   <int>   <int> <int> <int> <lgl>   <lgl> 
@@ -92,7 +92,7 @@ extract_cvr(path = c("data-raw/json/CvrExport_42.json",
 #> 10   6394          1       27       0       0      78     1    92 FALSE   TRUE  
 #> # … with 1,374 more rows, 12 more variables: originalModified <chr>,
 #> #   precinct <int>, ballotType <int>, isCurrent <lgl>, tabulator <int>,
-#> #   batch <int>, recordId <int>, countyGroupId <int>, sessionType <chr>,
+#> #   batch <int>, recordId <int>, countingGroupId <int>, sessionType <chr>,
 #> #   votingSessionId <chr>, uniqueVotingIdentifer <chr>, file <chr>, and
 #> #   abbreviated variable names ¹​contestId, ²​overvotes, ³​undervotes,
 #> #   ⁴​candidateId

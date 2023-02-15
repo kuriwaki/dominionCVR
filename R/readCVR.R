@@ -94,7 +94,7 @@ extract_cvr <- function(path = NULL, zipdir = NULL, future = FALSE, verbose = TR
       tabulator = sess$TabulatorId,
       batch = sess$BatchId,
       recordId = sess$RecordId,
-      countyGroupId = sess$CountingGroupId,
+      countingGroupId = sess$CountingGroupId,
       sessionType = sess$SessionType,
       votingSessionId = sess$VotingSessionIdentifier,
       uniqueVotingIdentifer = sess$UniqueVotingIdentifier
@@ -110,7 +110,7 @@ extract_cvr <- function(path = NULL, zipdir = NULL, future = FALSE, verbose = TR
 #' @keywords internal
 .extract_from_contest <- function(cont, card) {
     if (length(cont$Marks) == 0) {
-      mrks <- list(list()) 
+      mrks <- list(list())
     } else {
       mrks <- cont$Marks
     }
