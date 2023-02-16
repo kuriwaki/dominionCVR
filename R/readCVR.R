@@ -8,7 +8,7 @@
 #'  corresponds to a file. Then the function will extract the file internally.
 #' @param future Whether to attempt to parallelize across files. Defaults to FALSE.
 #' @param .max_marks Maximum number of marks found in any counting session.
-#'
+#' @return A dataframe where each row is a record. Does not turn into a tibble
 #' @useDynLib dominionCVR
 #'
 #' @importFrom RcppSimdJson fparse

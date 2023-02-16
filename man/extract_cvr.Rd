@@ -24,6 +24,9 @@ corresponds to a file. Then the function will extract the file internally.}
 
 \item{.max_marks}{Maximum number of marks found in any counting session.}
 }
+\value{
+A dataframe where each row is a record. Does not turn into a tibble
+}
 \description{
 Extract tabular data from Dominion CVR
 }
