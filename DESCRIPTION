@@ -21,6 +21,7 @@ Depends:
   RcppSimdJson
 Imports:
   readr,
+  dplyr,
   furrr,
   progressr,
   purrr,

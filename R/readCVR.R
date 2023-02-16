@@ -17,6 +17,7 @@
 #' @importFrom tictoc tic toc
 #' @importFrom readr read_file_raw
 #' @importFrom progressr progressor with_progress
+#' @importFrom dplyr mutate bind_rows
 #' @examples
 #'
 #'  js_files <- c("data-raw/json/CvrExport_42.json", "data-raw/json/CvrExport_24940.json")

@@ -3,6 +3,8 @@
 export(extract_cvr)
 export(read_manifest)
 importFrom(RcppSimdJson,fparse)
+importFrom(dplyr,bind_rows)
+importFrom(dplyr,mutate)
 importFrom(fs,path_file)
 importFrom(furrr,future_map)
 importFrom(furrr,future_map_dfr)

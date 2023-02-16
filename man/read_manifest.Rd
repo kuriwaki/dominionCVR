@@ -7,12 +7,9 @@
 read_manifest(path = NULL, zipdir = NULL)
 }
 \arguments{
-\item{path}{The path to data as a vector of strings, typically with a \code{".json"} file extension.
-If the file is within an unzipped zip file, also specify \code{zipdir}.}
-
-\item{zipdir}{if the json files are in a zipped file and you do not want to
-unzip the whole thing, you can list a \code{zipdir} so that the path \code{{zipdir}/{path}}
-corresponds to a file. Then the function will extract the file internally.}
+\item{path}{The path to a specific JSON file.  It can be a path within a zipfile,
+in which case you can also set the \code{zipdir} argument. The possible set of
+Manifest file names are listed below.}
 }
 \description{
 Simple wrapper around manifest json file
