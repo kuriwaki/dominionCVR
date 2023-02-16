@@ -39,27 +39,28 @@ library(jsonlite)
 Currently there is a simple function to read from a JSON file:
 
 ``` r
-extract_cvr(path = "data-raw/json/CvrExport_42.json")
-#> 4.385 sec elapsed
-#> # A tibble: 1,216 × 22
-#>    cardId paperIndex contes…¹ overv…² under…³ candi…⁴  rank mdens isAmbig isVote
-#>     <int>      <int>    <int>   <int>   <int>   <int> <int> <int> <lgl>   <lgl> 
-#>  1   6394          1       18       0       0      60     1    94 FALSE   TRUE  
-#>  2   6394          1       19       0       0      63     1    90 FALSE   TRUE  
-#>  3   6394          1       20       0       0      65     1    99 FALSE   TRUE  
-#>  4   6394          1       21       0       0      67     1    96 FALSE   TRUE  
-#>  5   6394          1       22       0       0      69     1    98 FALSE   TRUE  
-#>  6   6394          1       23       0       0      71     1    97 FALSE   TRUE  
-#>  7   6394          1       24       0       0      72     1    95 FALSE   TRUE  
-#>  8   6394          1       25       0       0      74     1    94 FALSE   TRUE  
-#>  9   6394          1       26       0       0      76     1    96 FALSE   TRUE  
-#> 10   6394          1       27       0       0      78     1    92 FALSE   TRUE  
-#> # … with 1,206 more rows, 12 more variables: originalModified <chr>,
-#> #   precinct <int>, ballotType <int>, isCurrent <lgl>, tabulator <int>,
-#> #   batch <int>, recordId <int>, countingGroupId <int>, sessionType <chr>,
-#> #   votingSessionId <chr>, uniqueVotingIdentifer <chr>, file <chr>, and
-#> #   abbreviated variable names ¹​contestId, ²​overvotes, ³​undervotes,
-#> #   ⁴​candidateId
+extract_cvr(path = "data-raw/json/CvrExport_42.json") |> 
+  as_tibble()
+#> 0.05 sec elapsed
+#> # A tibble: 1,111 × 21
+#>    origi…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batch recor…⁶ count…⁷ votin…⁸ isCur…⁹
+#>    <chr>   <chr>     <int>   <int>   <int> <int>   <int>   <int> <chr>   <lgl>  
+#>  1 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  2 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  3 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  4 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  5 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  6 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  7 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  8 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  9 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#> 10 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#> # … with 1,101 more rows, 11 more variables: cardId <int>, paperIndex <int>,
+#> #   contestId <int>, overvotes <int>, undervotes <int>, candidateId <int>,
+#> #   rank <int>, mdens <int>, isAmbiguous <lgl>, isVote <lgl>, file <chr>, and
+#> #   abbreviated variable names ¹​originalModified, ²​sessionType, ³​precinct,
+#> #   ⁴​ballotTypeId, ⁵​tabulator, ⁶​recordId, ⁷​countingGroupId, ⁸​votingSessionId,
+#> #   ⁹​isCurrent
 ```
 
 It can read multiple files at the same time and run in multicore
@@ -75,27 +76,28 @@ plan("multicore")
 #> or not, and how to silence this warning in future R sessions, see
 #> ?parallelly::supportsMulticore
 extract_cvr(path = c("data-raw/json/CvrExport_42.json",
-                     "data-raw/json/CvrExport_24940.json"))
-#> 4.484 sec elapsed
-#> # A tibble: 1,384 × 22
-#>    cardId paperIndex contes…¹ overv…² under…³ candi…⁴  rank mdens isAmbig isVote
-#>     <int>      <int>    <int>   <int>   <int>   <int> <int> <int> <lgl>   <lgl> 
-#>  1   6394          1       18       0       0      60     1    94 FALSE   TRUE  
-#>  2   6394          1       19       0       0      63     1    90 FALSE   TRUE  
-#>  3   6394          1       20       0       0      65     1    99 FALSE   TRUE  
-#>  4   6394          1       21       0       0      67     1    96 FALSE   TRUE  
-#>  5   6394          1       22       0       0      69     1    98 FALSE   TRUE  
-#>  6   6394          1       23       0       0      71     1    97 FALSE   TRUE  
-#>  7   6394          1       24       0       0      72     1    95 FALSE   TRUE  
-#>  8   6394          1       25       0       0      74     1    94 FALSE   TRUE  
-#>  9   6394          1       26       0       0      76     1    96 FALSE   TRUE  
-#> 10   6394          1       27       0       0      78     1    92 FALSE   TRUE  
-#> # … with 1,374 more rows, 12 more variables: originalModified <chr>,
-#> #   precinct <int>, ballotType <int>, isCurrent <lgl>, tabulator <int>,
-#> #   batch <int>, recordId <int>, countingGroupId <int>, sessionType <chr>,
-#> #   votingSessionId <chr>, uniqueVotingIdentifer <chr>, file <chr>, and
-#> #   abbreviated variable names ¹​contestId, ²​overvotes, ³​undervotes,
-#> #   ⁴​candidateId
+                     "data-raw/json/CvrExport_24940.json")) |> 
+  as_tibble()
+#> 0.026 sec elapsed
+#> # A tibble: 1,155 × 21
+#>    origi…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batch recor…⁶ count…⁷ votin…⁸ isCur…⁹
+#>    <chr>   <chr>     <int>   <int>   <int> <int>   <int>   <int> <chr>   <lgl>  
+#>  1 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  2 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  3 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  4 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  5 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  6 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  7 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  8 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#>  9 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#> 10 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
+#> # … with 1,145 more rows, 11 more variables: cardId <int>, paperIndex <int>,
+#> #   contestId <int>, overvotes <int>, undervotes <int>, candidateId <int>,
+#> #   rank <int>, mdens <int>, isAmbiguous <lgl>, isVote <lgl>, file <chr>, and
+#> #   abbreviated variable names ¹​originalModified, ²​sessionType, ³​precinct,
+#> #   ⁴​ballotTypeId, ⁵​tabulator, ⁶​recordId, ⁷​countingGroupId, ⁸​votingSessionId,
+#> #   ⁹​isCurrent
 ```
 
 ## Inside CVR Exports
