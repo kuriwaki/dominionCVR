@@ -62,22 +62,6 @@ extract_cvr(path = c("data-raw/json/CvrExport_42.json",
 
 
 
-## Inside Manifest Files
-
-Metadata about the contests are stored in Manifest files, e.g. for contests
-
-
-```{r}
-fromJSON("data-raw/json/ContestManifest.json")$List %>% as_tibble()
-```
-
-and candidates in those contests
-
-```{r}
-fromJSON("data-raw/json/CandidateManifest.json")$List %>% 
-  as_tibble()
-```
-
 
 ## Inside CVR Exports
 
@@ -161,3 +145,25 @@ votes %>%
 ```
 
 
+
+## Inside Manifest Files
+
+Metadata about the contests are stored in Manifest files, e.g. for contest codes, use `contestManifest.json` and for candidate codes use `CandidateManifest.json`. These are single-table JSONs that are easy to read, but we provide the function `read_manifest` that exports a tibble and can extract from a zip file too.
+
+
+```{r}
+ read_manifest("data-raw/json/BallotTypeContestManifest.json")
+ read_manifest("data-raw/json/BallotTypeManifest.json")
+ read_manifest("data-raw/json/CandidateManifest.json")
+ read_manifest("data-raw/json/ContestManifest.json")
+ read_manifest("data-raw/json/CountingGroupManifest.json")
+ read_manifest("data-raw/json/DistrictManifest.json")
+ read_manifest("data-raw/json/DistrictPrecinctPortionManifest.json")
+ read_manifest("data-raw/json/DistrictTypeManifest.json")
+ read_manifest("data-raw/json/ElectionEventManifest.json")
+ read_manifest("data-raw/json/OutstackConditionManifest.json")
+ read_manifest("data-raw/json/PartyManifest.json")
+ read_manifest("data-raw/json/PrecinctManifest.json")
+ read_manifest("data-raw/json/PrecinctPortionManifest.json")
+ read_manifest("data-raw/json/TabulatorManifest.json")
+```

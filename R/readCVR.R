@@ -8,7 +8,9 @@
 #'  corresponds to a file. Then the function will extract the file internally.
 #' @param future Whether to attempt to parallelize across files. Defaults to FALSE.
 #' @param .max_marks Maximum number of marks found in any counting session.
+#'
 #' @useDynLib dominionCVR
+#'
 #' @importFrom RcppSimdJson fparse
 #' @importFrom purrr map map_dfr map
 #' @importFrom furrr future_map_dfr future_map
@@ -19,17 +21,16 @@
 #' @importFrom readr read_file_raw
 #' @importFrom progressr progressor with_progress
 #' @importFrom Rcpp evalCpp
-#' @examples
+#' @importFrom dplyr mutate bind_rows
 #'
+#' @examples
 #'  js_files <- c("data-raw/json/CvrExport_42.json", "data-raw/json/CvrExport_24940.json")
 #'  library(furrr)
 #'  extract_cvr(path = js_files)
 #'
 #'  plan("multicore")
 #'  extract_cvr(js_files, future = TRUE)
-#'
 #' @export
-#'
 extract_cvr <-
   function(path = NULL,
            zipdir = NULL,
@@ -104,7 +105,7 @@ extract_cvr <-
       tabulator = sess$TabulatorId,
       batch = sess$BatchId,
       recordId = sess$RecordId,
-      countyGroupId = sess$CountingGroupId,
+      countingGroupId = sess$CountingGroupId,
       sessionType = sess$SessionType,
       votingSessionId = sess$VotingSessionIdentifier,
       uniqueVotingIdentifer = sess$UniqueVotingIdentifier
@@ -119,7 +120,12 @@ extract_cvr <-
 
 #' @keywords internal
 .extract_from_contest <- function(cont, card) {
-  map(cont$Marks, ~ .extract_from_mark(.x, card, cont))
+    if (length(cont$Marks) == 0) {
+      mrks <- list(list())
+    } else {
+      mrks <- cont$Marks
+    }
+    map(mrks, ~.extract_from_mark(.x, card, cont))
 }
 
 

@@ -28,12 +28,10 @@ corresponds to a file. Then the function will extract the file internally.}
 Extract tabular data from Dominion CVR
 }
 \examples{
-
  js_files <- c("data-raw/json/CvrExport_42.json", "data-raw/json/CvrExport_24940.json")
  library(furrr)
  extract_cvr(path = js_files)
 
  plan("multicore")
  extract_cvr(js_files, future = TRUE)
-
 }
