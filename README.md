@@ -42,7 +42,7 @@ Currently there is a simple function to read from a JSON file:
 extract_cvr(path = "data-raw/json/CvrExport_42.json") |> 
   as_tibble()
 #> 0.05 sec elapsed
-#> # A tibble: 1,111 × 21
+#> # A tibble: 1,216 × 21
 #>    origi…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batch recor…⁶ count…⁷ votin…⁸ isCur…⁹
 #>    <chr>   <chr>     <int>   <int>   <int> <int>   <int>   <int> <chr>   <lgl>  
 #>  1 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
@@ -55,7 +55,7 @@ extract_cvr(path = "data-raw/json/CvrExport_42.json") |>
 #>  8 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
 #>  9 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
 #> 10 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
-#> # … with 1,101 more rows, 11 more variables: cardId <int>, paperIndex <int>,
+#> # … with 1,206 more rows, 11 more variables: cardId <int>, paperIndex <int>,
 #> #   contestId <int>, overvotes <int>, undervotes <int>, candidateId <int>,
 #> #   rank <int>, mdens <int>, isAmbiguous <lgl>, isVote <lgl>, file <chr>, and
 #> #   abbreviated variable names ¹​originalModified, ²​sessionType, ³​precinct,
@@ -78,8 +78,8 @@ plan("multicore")
 extract_cvr(path = c("data-raw/json/CvrExport_42.json",
                      "data-raw/json/CvrExport_24940.json")) |> 
   as_tibble()
-#> 0.026 sec elapsed
-#> # A tibble: 1,155 × 21
+#> 0.025 sec elapsed
+#> # A tibble: 1,384 × 21
 #>    origi…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batch recor…⁶ count…⁷ votin…⁸ isCur…⁹
 #>    <chr>   <chr>     <int>   <int>   <int> <int>   <int>   <int> <chr>   <lgl>  
 #>  1 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
@@ -92,7 +92,7 @@ extract_cvr(path = c("data-raw/json/CvrExport_42.json",
 #>  8 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
 #>  9 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
 #> 10 Origin… Scanne…     157      51      21    20      88       2 ""      TRUE   
-#> # … with 1,145 more rows, 11 more variables: cardId <int>, paperIndex <int>,
+#> # … with 1,374 more rows, 11 more variables: cardId <int>, paperIndex <int>,
 #> #   contestId <int>, overvotes <int>, undervotes <int>, candidateId <int>,
 #> #   rank <int>, mdens <int>, isAmbiguous <lgl>, isVote <lgl>, file <chr>, and
 #> #   abbreviated variable names ¹​originalModified, ²​sessionType, ³​precinct,
