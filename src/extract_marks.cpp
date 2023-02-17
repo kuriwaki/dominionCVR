@@ -32,6 +32,9 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
     std::vector<bool> isAmbiguous(max_marks);
     std::vector<bool> isVote(max_marks);
 
+    Rcpp::List mark;
+    Rcpp::List empty_mark = Rcpp::List::create();
+    bool zero_marks = false;
     int mark_no = 0;
     for (int i=0; i<sessions.length(); i++) {
       Rcpp::List session=sessions[i];
@@ -47,8 +50,14 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
               for (int k=0; k<contests.length(); k++) {
                 Rcpp::List contest = contests[k];
                 Rcpp::List marks = contest["Marks"];
-                for (int m=0; m<marks.length(); m++) {
-                  Rcpp::List mark = marks[m];
+                zero_marks = marks.length() == 0;
+                for (int m=0; zero_marks | (m<marks.length()); m++) {
+                  if (marks.length() > 0) {
+                    mark = marks[m];
+                  }
+                  else {
+                    mark = empty_mark;
+                  }
                   originalModified[mark_no] = om;
                   sessionType[mark_no] =  st; // session["SessionType"];
                   precinct[mark_no] = orig_mod["PrecinctPortionId"];
@@ -65,12 +74,13 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
                   contestId[mark_no] = contest["Id"];
                   overvotes[mark_no] = contest["Overvotes"];
                   undervotes[mark_no] = contest["Undervotes"];
-                  candidateId[mark_no] = mark["CandidateId"];
-                  rank[mark_no] = mark["Rank"];
-                  mdens[mark_no] = mark["MarkDensity"];
-                  isAmbiguous[mark_no] =  (bool) mark["IsAmbiguous"];
-                  isVote[mark_no] = (bool) mark["IsVote"];
+                  candidateId[mark_no] = zero_marks ? -1 : mark["CandidateId"];
+                  rank[mark_no] = zero_marks ? -1 : mark["Rank"];
+                  mdens[mark_no] = zero_marks ? -1 : mark["MarkDensity"];
+                  isAmbiguous[mark_no] =  (bool) zero_marks ? 0 : mark["IsAmbiguous"];
+                  isVote[mark_no] = (bool) zero_marks ? 0 : mark["IsVote"];
                   mark_no++;
+                  if (zero_marks) break;
                 }
             }
           }
