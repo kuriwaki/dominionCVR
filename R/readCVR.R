@@ -87,7 +87,7 @@ extract_cvr <-
   map_dfr(sess$Original$Cards, ~ .extract_from_card(.x)) %>%
     mutate(
       originalModified = "O",
-      precinct = sess$Original$PrecinctPortionId,
+      precinctPortionId = sess$Original$PrecinctPortionId,
       ballotType = sess$Original$BallotTypeId,
       isCurrent = sess$Original$IsCurrent
     ) %>%
@@ -96,14 +96,14 @@ extract_cvr <-
       map_dfr(sess$Modified$Cards, ~ .extract_from_card(.x)) %>%
         mutate(
           originalModified = "M",
-          precinct = sess$Modified$PrecinctPortionId,
+          precinctPortionId = sess$Modified$PrecinctPortionId,
           ballotType = sess$Modified$BallotTypeId,
           isCurrent = sess$Modified$IsCurrent
         )
     ) %>%
     mutate(
-      tabulator = sess$TabulatorId,
-      batch = sess$BatchId,
+      tabulatorId = sess$TabulatorId,
+      batchId = sess$BatchId,
       recordId = sess$RecordId,
       countingGroupId = sess$CountingGroupId,
       sessionType = sess$SessionType,
@@ -140,7 +140,7 @@ extract_cvr <-
     candidateId = mark$CandidateId,
     rank = mark$Rank,
     mdens = mark$MarkDensity,
-    isAmbig = mark$IsAmbiguous,
+    isAmbiguous = mark$IsAmbiguous,
     isVote = mark$IsVote
   )
 }
