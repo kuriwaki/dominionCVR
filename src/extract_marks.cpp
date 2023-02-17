@@ -12,10 +12,10 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
 
     std::vector<std::string> originalModified(max_marks);
     std::vector<std::string> sessionType(max_marks);
-    std::vector<int> precinct(max_marks);
+    std::vector<int> precinctPortionId(max_marks);
     std::vector<int> ballotTypeId(max_marks);
-    std::vector<int> tabulator(max_marks);
-    std::vector<int> batch(max_marks);
+    std::vector<int> tabulatorId(max_marks);
+    std::vector<int> batchId(max_marks);
     std::vector<int> recordId(max_marks);
     std::vector<int> countingGroupId(max_marks);
     std::vector<std::string> votingSessionId(max_marks);
@@ -60,10 +60,10 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
                   }
                   originalModified[mark_no] = om;
                   sessionType[mark_no] =  st; // session["SessionType"];
-                  precinct[mark_no] = orig_mod["PrecinctPortionId"];
+                  precinctPortionId[mark_no] = orig_mod["PrecinctPortionId"];
                   ballotTypeId[mark_no] = orig_mod["BallotTypeId"];
-                  tabulator[mark_no] = session["TabulatorId"];
-                  batch[mark_no] = session["BatchId"];
+                  tabulatorId[mark_no] = session["TabulatorId"];
+                  batchId[mark_no] = session["BatchId"];
                   recordId[mark_no] = session["RecordId"];
                   countingGroupId[mark_no] = session["CountingGroupId"];
                   votingSessionId[mark_no] = (const char *) session["VotingSessionIdentifier"];
@@ -91,10 +91,10 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
     //Shorten vectors to actual length
     originalModified.resize(mark_no);
     sessionType.resize(mark_no);
-    precinct.resize(mark_no);
+    precinctPortionId.resize(mark_no);
     ballotTypeId.resize(mark_no);
-    tabulator.resize(mark_no);
-    batch.resize(mark_no);
+    tabulatorId.resize(mark_no);
+    batchId.resize(mark_no);
     recordId.resize(mark_no);
     countingGroupId.resize(mark_no);
     votingSessionId.resize(mark_no);
@@ -114,10 +114,10 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
     return(Rcpp::DataFrame::create(
       Rcpp::Named("originalModified") = originalModified,
       Rcpp::Named("sessionType") = sessionType,
-      Rcpp::Named("precinct") = precinct,
+      Rcpp::Named("precinctPortionId") = precinctPortionId,
       Rcpp::Named("ballotTypeId") = ballotTypeId,
-      Rcpp::Named("tabulator") = tabulator,
-      Rcpp::Named("batch") = batch,
+      Rcpp::Named("tabulatorId") = tabulatorId,
+      Rcpp::Named("batchId") = batchId,
       Rcpp::Named("recordId") = recordId,
       Rcpp::Named("countingGroupId") = countingGroupId,
       Rcpp::Named("votingSessionId") = votingSessionId,
