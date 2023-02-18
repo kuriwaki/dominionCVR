@@ -8,6 +8,7 @@
 #'  corresponds to a file. Then the function will extract the file internally.
 #' @param future Whether to attempt to parallelize across files. Defaults to FALSE.
 #' @param .max_marks Maximum number of marks found in any counting session.
+#'   If a file contains more marks than this amount, it will throw a long segfault error.
 #' @return A dataframe where each row is a record. Does not turn into a tibble
 #' @useDynLib dominionCVR
 #'
@@ -71,76 +72,3 @@ extract_cvr <-
     toc()
     return(out)
   }
-
-#
-# Vestigial code from the days of mapping to parse the JSON
-#
-
-#' @keywords internal
-.extract_from_file <- function(file) {
-  map_dfr(file, ~ .extract_from_session(.x))
-}
-
-#' @keywords internal
-.extract_from_session <- function(sess) {
-  # Get "original" marks
-  map_dfr(sess$Original$Cards, ~ .extract_from_card(.x)) %>%
-    mutate(
-      originalModified = "O",
-      precinct = sess$Original$PrecinctPortionId,
-      ballotType = sess$Original$BallotTypeId,
-      isCurrent = sess$Original$IsCurrent
-    ) %>%
-    # Add "modified" marks
-    bind_rows(
-      map_dfr(sess$Modified$Cards, ~ .extract_from_card(.x)) %>%
-        mutate(
-          originalModified = "M",
-          precinct = sess$Modified$PrecinctPortionId,
-          ballotType = sess$Modified$BallotTypeId,
-          isCurrent = sess$Modified$IsCurrent
-        )
-    ) %>%
-    mutate(
-      tabulator = sess$TabulatorId,
-      batch = sess$BatchId,
-      recordId = sess$RecordId,
-      countingGroupId = sess$CountingGroupId,
-      sessionType = sess$SessionType,
-      votingSessionId = sess$VotingSessionIdentifier,
-      uniqueVotingIdentifer = sess$UniqueVotingIdentifier
-    )
-}
-
-#' @keywords internal
-.extract_from_card <- function(card) {
-  map(card$Contests, ~ .extract_from_contest(.x, card)) %>%
-    unlist(recursive = FALSE)
-}
-
-#' @keywords internal
-.extract_from_contest <- function(cont, card) {
-    if (length(cont$Marks) == 0) {
-      mrks <- list(list())
-    } else {
-      mrks <- cont$Marks
-    }
-    map(mrks, ~.extract_from_mark(.x, card, cont))
-}
-
-
-#' @keywords internal
-.extract_from_mark <- function(mark, card, cont) {
-  list(
-    cardId = card$Id,
-    paperIndex = card$PaperIndex,
-    contestId = cont$Id,
-    overvotes = cont$Overvotes,
-    undervotes = cont$Undervotes,
-    candidateId = mark$CandidateId,
-    rank = mark$Rank,
-    mdens = mark$MarkDensity,
-    isAmbig = mark$IsAmbiguous,
-    isVote = mark$IsVote
-  )
-}

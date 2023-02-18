@@ -22,7 +22,8 @@ corresponds to a file. Then the function will extract the file internally.}
 
 \item{future}{Whether to attempt to parallelize across files. Defaults to FALSE.}
 
-\item{.max_marks}{Maximum number of marks found in any counting session.}
+\item{.max_marks}{Maximum number of marks found in any counting session.
+If a file contains more marks than this amount, it will throw a long segfault error.}
 }
 \value{
 A dataframe where each row is a record. Does not turn into a tibble
