@@ -4,7 +4,13 @@
 \alias{extract_cvr}
 \title{Extract tabular data from Dominion CVR}
 \usage{
-extract_cvr(path = NULL, zipdir = NULL, future = FALSE, verbose = TRUE)
+extract_cvr(
+  path = NULL,
+  zipdir = NULL,
+  future = FALSE,
+  verbose = TRUE,
+  .max_marks = 1e+05
+)
 }
 \arguments{
 \item{path}{The path to data as a vector of strings, typically with a \code{".json"} file extension.
@@ -15,17 +21,20 @@ unzip the whole thing, you can list a \code{zipdir} so that the path \code{{zipd
 corresponds to a file. Then the function will extract the file internally.}
 
 \item{future}{Whether to attempt to parallelize across files. Defaults to FALSE.}
+
+\item{.max_marks}{Maximum number of marks found in any counting session.}
+}
+\value{
+A dataframe where each row is a record. Does not turn into a tibble
 }
 \description{
 Extract tabular data from Dominion CVR
 }
 \examples{
-
  js_files <- c("data-raw/json/CvrExport_42.json", "data-raw/json/CvrExport_24940.json")
  library(furrr)
  extract_cvr(path = js_files)
 
  plan("multicore")
  extract_cvr(js_files, future = TRUE)
-
 }
