@@ -52,6 +52,9 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
                 Rcpp::List marks = contest["Marks"];
                 zero_marks = marks.length() == 0;
                 for (int m=0; zero_marks | (m<marks.length()); m++) {
+                  if (mark_no == max_marks) {
+                    Rcpp::stop(".max_marks exceeded. Please reset .max_marks to a larger value.");
+                  }
                   if (marks.length() > 0) {
                     mark = marks[m];
                   }
