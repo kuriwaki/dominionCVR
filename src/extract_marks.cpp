@@ -31,7 +31,7 @@ int count_marks(Rcpp::List sessions) {
 //' Extract marks and metadata from CVR JSON
 //'
 //' @param sessions  CVR JSON
-//' @param max_marks Maximum number of vote choice that JSON could contain
+//' @param max_marks Maximum number of vote choices that the JSON could contain
 //' @return dataframe containing the extracted vote choices and meta data
 // [[Rcpp::export]]
 
@@ -81,8 +81,10 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
                 zero_marks = marks.length() == 0;
                 for (int m=0; zero_marks | (m<marks.length()); m++) {
                   if (mark_no == max_marks) {
-                    Rcpp::stop(".max_marks exceeded. Reset .max_marks to be greater than %i.",
-                               count_marks(sessions));
+                    int tot_marks = count_marks(sessions);
+                    Rcpp::warning(".max_marks exceeded. Resetting .max_marks to %i.",
+                                  tot_marks);
+                    return(extract_marks(sessions, tot_marks));
                   }
                   if (marks.length() > 0) {
                     mark = marks[m];
