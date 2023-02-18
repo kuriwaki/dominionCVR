@@ -1,5 +1,33 @@
 #include <Rcpp.h>
 
+// Function to count marks in JSON file to use when .max_marks
+// is exceeded for better error messaging.
+
+int count_marks(Rcpp::List sessions) {
+  int mark_no = 0;
+  Rcpp::StringVector origMod = {"Original", "Modified"};
+  for (int i=0; i<sessions.length(); i++) {
+    Rcpp::List session=sessions[i];
+    for (int n=0; n<2; n++) {
+      const char * om = origMod[n];
+      if (session.containsElementNamed(om)) {
+        Rcpp::List orig_mod = session[om];
+        Rcpp::List cards = orig_mod["Cards"];
+        for (int j=0; j<cards.length(); j++) {
+          Rcpp::List card=cards[j];
+          Rcpp::List contests = card["Contests"];
+          for (int k=0; k<contests.length(); k++) {
+            Rcpp::List contest = contests[k];
+            Rcpp::List marks = contest["Marks"];
+            mark_no += marks.length() == 0 ? 1 : marks.length();
+          }
+        }
+      }
+    }
+  }
+  return(mark_no);
+}
+
 //' Extract marks and metadata from CVR JSON
 //'
 //' @param sessions  CVR JSON
@@ -53,7 +81,8 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
                 zero_marks = marks.length() == 0;
                 for (int m=0; zero_marks | (m<marks.length()); m++) {
                   if (mark_no == max_marks) {
-                    Rcpp::stop(".max_marks exceeded. Please reset .max_marks to a larger value.");
+                    Rcpp::stop(".max_marks exceeded. Reset .max_marks to be greater than %i.",
+                               count_marks(sessions));
                   }
                   if (marks.length() > 0) {
                     mark = marks[m];
