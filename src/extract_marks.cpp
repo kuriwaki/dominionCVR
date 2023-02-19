@@ -27,6 +27,7 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
     std::vector<int> overvotes(max_marks);
     std::vector<int> undervotes(max_marks);
     std::vector<int> candidateId(max_marks);
+    std::vector<int> partyId(max_marks);
     std::vector<int> rank(max_marks);
     std::vector<int> mdens(max_marks);
     std::vector<bool> isAmbiguous(max_marks);
@@ -75,6 +76,7 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
                   overvotes[mark_no] = contest["Overvotes"];
                   undervotes[mark_no] = contest["Undervotes"];
                   candidateId[mark_no] = zero_marks ? -1 : mark["CandidateId"];
+                  partyId[mark_no] = zero_marks ? -1 : mark["PartyId"];
                   rank[mark_no] = zero_marks ? -1 : mark["Rank"];
                   mdens[mark_no] = zero_marks ? -1 : mark["MarkDensity"];
                   isAmbiguous[mark_no] =  (bool) zero_marks ? 0 : mark["IsAmbiguous"];
@@ -106,6 +108,7 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
     overvotes.resize(mark_no);
     undervotes.resize(mark_no);
     candidateId.resize(mark_no);
+    partyId.resize(mark_no);
     rank.resize(mark_no);
     mdens.resize(mark_no);
     isAmbiguous.resize(mark_no);
@@ -129,8 +132,9 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
       Rcpp::Named("overvotes") = overvotes,
       Rcpp::Named("undervotes") = undervotes,
       Rcpp::Named("candidateId") = candidateId,
+      Rcpp::Named("partyId") = partyId,
       Rcpp::Named("rank") = rank,
-      Rcpp::Named("mdens") = mdens,
+      //Rcpp::Named("mdens") = mdens,
       Rcpp::Named("isAmbiguous") = isAmbiguous,
       Rcpp::Named("isVote") = isVote)
     );
