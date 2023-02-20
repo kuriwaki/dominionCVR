@@ -76,7 +76,11 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
                   overvotes[mark_no] = contest["Overvotes"];
                   undervotes[mark_no] = contest["Undervotes"];
                   candidateId[mark_no] = zero_marks ? -1 : mark["CandidateId"];
+                  if (mark.containsElementNamed("PartyId")) {
                   partyId[mark_no] = zero_marks ? -1 : mark["PartyId"];
+                  } else {
+                    partyId[mark_no] = -1;
+                  }
                   rank[mark_no] = zero_marks ? -1 : mark["Rank"];
                   mdens[mark_no] = zero_marks ? -1 : mark["MarkDensity"];
                   isAmbiguous[mark_no] =  (bool) zero_marks ? 0 : mark["IsAmbiguous"];
