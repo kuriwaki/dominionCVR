@@ -4,7 +4,7 @@
 #' Extract marks and metadata from CVR JSON
 #'
 #' @param sessions  CVR JSON
-#' @param max_marks Maximum number of vote choice that JSON could contain
+#' @param max_marks Maximum number of vote choices that the JSON could contain
 #' @return dataframe containing the extracted vote choices and meta data
 extract_marks <- function(sessions, max_marks) {
     .Call(`_dominionCVR_extract_marks`, sessions, max_marks)
