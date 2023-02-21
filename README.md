@@ -41,7 +41,7 @@ Currently there is a simple function to read from a JSON file:
 ``` r
 extract_cvr(path = "data-raw/json/CvrExport_42.json") |> 
   as_tibble()
-#> 0.045 sec elapsed
+#> 0.05 sec elapsed
 #> # A tibble: 1,216 × 21
 #>    originalMod…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batchId recor…⁶ count…⁷ votin…⁸
 #>    <chr>         <chr>     <int>   <int>   <int>   <int>   <int>   <int> <chr>  
@@ -78,7 +78,7 @@ plan("multicore")
 extract_cvr(path = c("data-raw/json/CvrExport_42.json",
                      "data-raw/json/CvrExport_24940.json")) |> 
   as_tibble()
-#> 0.028 sec elapsed
+#> 0.023 sec elapsed
 #> # A tibble: 1,384 × 21
 #>    originalMod…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batchId recor…⁶ count…⁷ votin…⁸
 #>    <chr>         <chr>     <int>   <int>   <int>   <int>   <int>   <int> <chr>  
