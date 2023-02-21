@@ -9,7 +9,7 @@ extract_marks(sessions, max_marks)
 \arguments{
 \item{sessions}{CVR JSON}
 
-\item{max_marks}{Maximum number of vote choice that JSON could contain}
+\item{max_marks}{Maximum number of vote choices that the JSON could contain}
 }
 \value{
 dataframe containing the extracted vote choices and meta data
