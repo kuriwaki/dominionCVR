@@ -65,7 +65,12 @@ extract_cvr <-
                             .$Sessions %>%
                             extract_marks(max_marks = .max_marks) %>%
                             mutate(file = fs::path_file(fn))
-                        })
+                        }) %>%
+                # Unpack isAmbiguous and mdens fields
+                mutate(isAmbiguous = isAmbiguous_mdens > 100,
+                       mdens = isAmbiguous_mdens -
+                               1000*(isAmbiguous_mdens > 100)) %>%
+                select(-isAmbiguous_mdens)
     })
 
     # output
