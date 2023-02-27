@@ -15,11 +15,11 @@ data files into tabular form.
 
 ## Installation
 
-You can install the released version of dominionCVR from
-[CRAN](https://CRAN.R-project.org) with:
+You can install the package from github as follows. You will need a
+Github Authorization token provided in the `auth_token` argument.
 
 ``` r
-install.packages("dominionCVR")
+remotes::install_github("kuriwaki/dominionCVR")
 ```
 
 ## Package and Dependencies
@@ -41,7 +41,7 @@ Currently there is a simple function to read from a JSON file:
 ``` r
 extract_cvr(path = "data-raw/json/CvrExport_42.json") |> 
   as_tibble()
-#> 0.072 sec elapsed
+#> 0.078 sec elapsed
 #> # A tibble: 1,216 × 22
 #>    originalMod…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batchId recor…⁶ count…⁷ votin…⁸
 #>    <chr>         <chr>     <int>   <int>   <int>   <int>   <int>   <int> <chr>  
@@ -80,7 +80,7 @@ extract_cvr(path = c("data-raw/json/CvrExport_42.json",
                      "data-raw/json/CvrExport_AZ-999.json"
                      )) |> 
   as_tibble()
-#> 0.069 sec elapsed
+#> 0.068 sec elapsed
 #> # A tibble: 5,011 × 22
 #>    originalMod…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batchId recor…⁶ count…⁷ votin…⁸
 #>    <chr>         <chr>     <int>   <int>   <int>   <int>   <int>   <int> <chr>  

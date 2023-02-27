@@ -25,11 +25,12 @@ Dominion voting machines, used in many places such as Arizona, Orange County, CA
  
 ## Installation
 
-You can install the released version of dominionCVR from [CRAN](https://CRAN.R-project.org) with:
+You can install the package from github as follows. You will need a Github Authorization token provided in the `auth_token` argument.
 
 ``` r
-install.packages("dominionCVR")
+remotes::install_github("kuriwaki/dominionCVR")
 ```
+
 
 ## Package and Dependencies
 
