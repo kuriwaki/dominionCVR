@@ -41,8 +41,8 @@ Currently there is a simple function to read from a JSON file:
 ``` r
 extract_cvr(path = "data-raw/json/CvrExport_42.json") |> 
   as_tibble()
-#> 0.046 sec elapsed
-#> # A tibble: 1,216 × 21
+#> 0.072 sec elapsed
+#> # A tibble: 1,216 × 22
 #>    originalMod…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batchId recor…⁶ count…⁷ votin…⁸
 #>    <chr>         <chr>     <int>   <int>   <int>   <int>   <int>   <int> <chr>  
 #>  1 Original      Scanne…     157      51      21      20      88       2 ""     
@@ -55,12 +55,12 @@ extract_cvr(path = "data-raw/json/CvrExport_42.json") |>
 #>  8 Original      Scanne…     157      51      21      20      88       2 ""     
 #>  9 Original      Scanne…     157      51      21      20      88       2 ""     
 #> 10 Original      Scanne…     157      51      21      20      88       2 ""     
-#> # … with 1,206 more rows, 12 more variables: isCurrent <lgl>, cardId <int>,
+#> # … with 1,206 more rows, 13 more variables: isCurrent <lgl>, cardId <int>,
 #> #   paperIndex <int>, contestId <int>, overvotes <int>, undervotes <int>,
-#> #   candidateId <int>, rank <int>, mdens <int>, isAmbiguous <lgl>,
-#> #   isVote <lgl>, file <chr>, and abbreviated variable names ¹​originalModified,
-#> #   ²​sessionType, ³​precinctPortionId, ⁴​ballotTypeId, ⁵​tabulatorId, ⁶​recordId,
-#> #   ⁷​countingGroupId, ⁸​votingSessionId
+#> #   candidateId <int>, partyId <int>, rank <int>, isVote <lgl>, file <chr>,
+#> #   isAmbiguous <lgl>, mdens <dbl>, and abbreviated variable names
+#> #   ¹​originalModified, ²​sessionType, ³​precinctPortionId, ⁴​ballotTypeId,
+#> #   ⁵​tabulatorId, ⁶​recordId, ⁷​countingGroupId, ⁸​votingSessionId
 ```
 
 It can read multiple files at the same time and run in multicore
@@ -80,8 +80,8 @@ extract_cvr(path = c("data-raw/json/CvrExport_42.json",
                      "data-raw/json/CvrExport_AZ-999.json"
                      )) |> 
   as_tibble()
-#> 0.057 sec elapsed
-#> # A tibble: 5,011 × 21
+#> 0.069 sec elapsed
+#> # A tibble: 5,011 × 22
 #>    originalMod…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batchId recor…⁶ count…⁷ votin…⁸
 #>    <chr>         <chr>     <int>   <int>   <int>   <int>   <int>   <int> <chr>  
 #>  1 Original      Scanne…     157      51      21      20      88       2 ""     
@@ -94,12 +94,12 @@ extract_cvr(path = c("data-raw/json/CvrExport_42.json",
 #>  8 Original      Scanne…     157      51      21      20      88       2 ""     
 #>  9 Original      Scanne…     157      51      21      20      88       2 ""     
 #> 10 Original      Scanne…     157      51      21      20      88       2 ""     
-#> # … with 5,001 more rows, 12 more variables: isCurrent <lgl>, cardId <int>,
+#> # … with 5,001 more rows, 13 more variables: isCurrent <lgl>, cardId <int>,
 #> #   paperIndex <int>, contestId <int>, overvotes <int>, undervotes <int>,
-#> #   candidateId <int>, rank <int>, mdens <int>, isAmbiguous <lgl>,
-#> #   isVote <lgl>, file <chr>, and abbreviated variable names ¹​originalModified,
-#> #   ²​sessionType, ³​precinctPortionId, ⁴​ballotTypeId, ⁵​tabulatorId, ⁶​recordId,
-#> #   ⁷​countingGroupId, ⁸​votingSessionId
+#> #   candidateId <int>, partyId <int>, rank <int>, isVote <lgl>, file <chr>,
+#> #   isAmbiguous <lgl>, mdens <dbl>, and abbreviated variable names
+#> #   ¹​originalModified, ²​sessionType, ³​precinctPortionId, ⁴​ballotTypeId,
+#> #   ⁵​tabulatorId, ⁶​recordId, ⁷​countingGroupId, ⁸​votingSessionId
 ```
 
 ## Inside CVR Exports
