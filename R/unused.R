@@ -65,8 +65,9 @@
     overvotes = cont$Overvotes,
     undervotes = cont$Undervotes,
     candidateId = mark$CandidateId,
+    partyId = mark$PartyId,
     rank = mark$Rank,
-    mdens = mark$MarkDensity,
+    # mdens = mark$MarkDensity,
     isAmbiguous = mark$IsAmbiguous,
     isVote = mark$IsVote
   )

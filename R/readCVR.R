@@ -22,7 +22,7 @@
 #' @importFrom readr read_file_raw
 #' @importFrom progressr progressor with_progress
 #' @importFrom Rcpp evalCpp
-#' @importFrom dplyr mutate bind_rows
+#' @importFrom dplyr mutate bind_rows select
 #'
 #' @examples
 #'  js_files <- c("data-raw/json/CvrExport_42.json", "data-raw/json/CvrExport_24940.json")
@@ -65,7 +65,12 @@ extract_cvr <-
                             .$Sessions %>%
                             extract_marks(max_marks = .max_marks) %>%
                             mutate(file = fs::path_file(fn))
-                        })
+                        }) %>%
+                # Unpack isAmbiguous and mdens fields
+                mutate(isAmbiguous = isAmbiguous_mdens > 100,
+                       mdens = isAmbiguous_mdens -
+                               1000*(isAmbiguous_mdens > 100)) %>%
+                select(-isAmbiguous_mdens)
     })
 
     # output
