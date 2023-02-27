@@ -41,7 +41,7 @@ Currently there is a simple function to read from a JSON file:
 ``` r
 extract_cvr(path = "data-raw/json/CvrExport_42.json") |> 
   as_tibble()
-#> 0.05 sec elapsed
+#> 0.044 sec elapsed
 #> # A tibble: 1,216 × 21
 #>    originalMod…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batchId recor…⁶ count…⁷ votin…⁸
 #>    <chr>         <chr>     <int>   <int>   <int>   <int>   <int>   <int> <chr>  
@@ -76,10 +76,12 @@ plan("multicore")
 #> or not, and how to silence this warning in future R sessions, see
 #> ?parallelly::supportsMulticore
 extract_cvr(path = c("data-raw/json/CvrExport_42.json",
-                     "data-raw/json/CvrExport_24940.json")) |> 
+                     "data-raw/json/CvrExport_24940.json",
+                     "data-raw/json/CvrExport_AZ-999.json"
+                     )) |> 
   as_tibble()
-#> 0.023 sec elapsed
-#> # A tibble: 1,384 × 21
+#> 0.054 sec elapsed
+#> # A tibble: 5,011 × 21
 #>    originalMod…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batchId recor…⁶ count…⁷ votin…⁸
 #>    <chr>         <chr>     <int>   <int>   <int>   <int>   <int>   <int> <chr>  
 #>  1 Original      Scanne…     157      51      21      20      88       2 ""     
@@ -92,7 +94,7 @@ extract_cvr(path = c("data-raw/json/CvrExport_42.json",
 #>  8 Original      Scanne…     157      51      21      20      88       2 ""     
 #>  9 Original      Scanne…     157      51      21      20      88       2 ""     
 #> 10 Original      Scanne…     157      51      21      20      88       2 ""     
-#> # … with 1,374 more rows, 12 more variables: isCurrent <lgl>, cardId <int>,
+#> # … with 5,001 more rows, 12 more variables: isCurrent <lgl>, cardId <int>,
 #> #   paperIndex <int>, contestId <int>, overvotes <int>, undervotes <int>,
 #> #   candidateId <int>, rank <int>, mdens <int>, isAmbiguous <lgl>,
 #> #   isVote <lgl>, file <chr>, and abbreviated variable names ¹​originalModified,
