@@ -99,7 +99,7 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
                   ballotTypeId[mark_no] = orig_mod["BallotTypeId"];
                   tabulatorId[mark_no] = session["TabulatorId"];
                   batchId[mark_no] = session["BatchId"];
-                  recordId[mark_no] = session["RecordId"];
+                  recordId[mark_no] = Rf_isNull(session["RecordId"]) ? -1 : session["RecordId"];
                   countingGroupId[mark_no] = session["CountingGroupId"];
                   votingSessionId[mark_no] = (const char *) session["VotingSessionIdentifier"];
                   uniqueVotingIdentifer[mark_no] = (const char *) session["UniqueVotingIdentifier"];
