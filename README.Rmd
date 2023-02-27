@@ -58,7 +58,9 @@ It can read multiple files at the same time and run in multicore settings
 library(furrr)
 plan("multicore")
 extract_cvr(path = c("data-raw/json/CvrExport_42.json",
-                     "data-raw/json/CvrExport_24940.json")) |> 
+                     "data-raw/json/CvrExport_24940.json",
+                     "data-raw/json/CvrExport_AZ-999.json"
+                     )) |> 
   as_tibble()
 ```
 
