@@ -1,6 +1,6 @@
 Package: dominionCVR
 Title: Read and Format Cast Vote Records from Dominion Voting Machines
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: 
   c(
     person(given = "Shiro",
