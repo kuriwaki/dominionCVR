@@ -41,26 +41,26 @@ Currently there is a simple function to read from a JSON file:
 ``` r
 extract_cvr(path = "data-raw/json/CvrExport_42.json") |> 
   as_tibble()
-#> 0.078 sec elapsed
+#> 0.082 sec elapsed
 #> # A tibble: 1,216 × 22
-#>    originalMod…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batchId recor…⁶ count…⁷ votin…⁸
-#>    <chr>         <chr>     <int>   <int>   <int>   <int>   <int>   <int> <chr>  
-#>  1 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  2 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  3 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  4 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  5 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  6 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  7 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  8 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  9 Original      Scanne…     157      51      21      20      88       2 ""     
-#> 10 Original      Scanne…     157      51      21      20      88       2 ""     
+#>    originalMod…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batchId recor…⁶ count…⁷ sessi…⁸
+#>    <chr>         <chr>     <int>   <int>   <int>   <int>   <int>   <int>   <int>
+#>  1 Original      Scanne…     157      51      21      20      88       2       0
+#>  2 Original      Scanne…     157      51      21      20      88       2       0
+#>  3 Original      Scanne…     157      51      21      20      88       2       0
+#>  4 Original      Scanne…     157      51      21      20      88       2       0
+#>  5 Original      Scanne…     157      51      21      20      88       2       0
+#>  6 Original      Scanne…     157      51      21      20      88       2       0
+#>  7 Original      Scanne…     157      51      21      20      88       2       0
+#>  8 Original      Scanne…     157      51      21      20      88       2       0
+#>  9 Original      Scanne…     157      51      21      20      88       2       0
+#> 10 Original      Scanne…     157      51      21      20      88       2       0
 #> # … with 1,206 more rows, 13 more variables: isCurrent <lgl>, cardId <int>,
 #> #   paperIndex <int>, contestId <int>, overvotes <int>, undervotes <int>,
 #> #   candidateId <int>, partyId <int>, rank <int>, isVote <lgl>, file <chr>,
 #> #   isAmbiguous <lgl>, mdens <dbl>, and abbreviated variable names
 #> #   ¹​originalModified, ²​sessionType, ³​precinctPortionId, ⁴​ballotTypeId,
-#> #   ⁵​tabulatorId, ⁶​recordId, ⁷​countingGroupId, ⁸​votingSessionId
+#> #   ⁵​tabulatorId, ⁶​recordId, ⁷​countingGroupId, ⁸​sessionIndex
 ```
 
 It can read multiple files at the same time and run in multicore
@@ -80,26 +80,26 @@ extract_cvr(path = c("data-raw/json/CvrExport_42.json",
                      "data-raw/json/CvrExport_AZ-999.json"
                      )) |> 
   as_tibble()
-#> 0.068 sec elapsed
+#> 0.069 sec elapsed
 #> # A tibble: 5,011 × 22
-#>    originalMod…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batchId recor…⁶ count…⁷ votin…⁸
-#>    <chr>         <chr>     <int>   <int>   <int>   <int>   <int>   <int> <chr>  
-#>  1 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  2 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  3 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  4 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  5 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  6 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  7 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  8 Original      Scanne…     157      51      21      20      88       2 ""     
-#>  9 Original      Scanne…     157      51      21      20      88       2 ""     
-#> 10 Original      Scanne…     157      51      21      20      88       2 ""     
+#>    originalMod…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batchId recor…⁶ count…⁷ sessi…⁸
+#>    <chr>         <chr>     <int>   <int>   <int>   <int>   <int>   <int>   <int>
+#>  1 Original      Scanne…     157      51      21      20      88       2       0
+#>  2 Original      Scanne…     157      51      21      20      88       2       0
+#>  3 Original      Scanne…     157      51      21      20      88       2       0
+#>  4 Original      Scanne…     157      51      21      20      88       2       0
+#>  5 Original      Scanne…     157      51      21      20      88       2       0
+#>  6 Original      Scanne…     157      51      21      20      88       2       0
+#>  7 Original      Scanne…     157      51      21      20      88       2       0
+#>  8 Original      Scanne…     157      51      21      20      88       2       0
+#>  9 Original      Scanne…     157      51      21      20      88       2       0
+#> 10 Original      Scanne…     157      51      21      20      88       2       0
 #> # … with 5,001 more rows, 13 more variables: isCurrent <lgl>, cardId <int>,
 #> #   paperIndex <int>, contestId <int>, overvotes <int>, undervotes <int>,
 #> #   candidateId <int>, partyId <int>, rank <int>, isVote <lgl>, file <chr>,
 #> #   isAmbiguous <lgl>, mdens <dbl>, and abbreviated variable names
 #> #   ¹​originalModified, ²​sessionType, ³​precinctPortionId, ⁴​ballotTypeId,
-#> #   ⁵​tabulatorId, ⁶​recordId, ⁷​countingGroupId, ⁸​votingSessionId
+#> #   ⁵​tabulatorId, ⁶​recordId, ⁷​countingGroupId, ⁸​sessionIndex
 ```
 
 ## Inside CVR Exports

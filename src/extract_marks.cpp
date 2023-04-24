@@ -46,6 +46,7 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
     std::vector<int> batchId(max_marks);
     std::vector<int> recordId(max_marks);
     std::vector<int> countingGroupId(max_marks);
+    std::vector<int> sessionIndex(max_marks);
     std::vector<std::string> votingSessionId(max_marks);
     std::vector<std::string> uniqueVotingIdentifer(max_marks);
     std::vector<bool> isCurrent(max_marks);
@@ -99,8 +100,9 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
                   ballotTypeId[mark_no] = orig_mod["BallotTypeId"];
                   tabulatorId[mark_no] = session["TabulatorId"];
                   batchId[mark_no] = session["BatchId"];
-                  recordId[mark_no] = session["RecordId"];
+                  recordId[mark_no] = Rf_isNull(session["RecordId"]) ? -1 : session["RecordId"];
                   countingGroupId[mark_no] = session["CountingGroupId"];
+                  sessionIndex[mark_no] = i;
                   votingSessionId[mark_no] = (const char *) session["VotingSessionIdentifier"];
                   uniqueVotingIdentifer[mark_no] = (const char *) session["UniqueVotingIdentifier"];
                   isCurrent[mark_no] = (bool) orig_mod["IsCurrent"];
@@ -132,6 +134,7 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
     batchId.resize(mark_no);
     recordId.resize(mark_no);
     countingGroupId.resize(mark_no);
+    sessionIndex.resize(mark_no);
     votingSessionId.resize(mark_no);
     uniqueVotingIdentifer.resize(mark_no);
     isCurrent.resize(mark_no);
@@ -155,7 +158,8 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
       Rcpp::Named("batchId") = batchId,
       Rcpp::Named("recordId") = recordId,
       Rcpp::Named("countingGroupId") = countingGroupId,
-      Rcpp::Named("votingSessionId") = votingSessionId,
+      Rcpp::Named("sessionIndex") = sessionIndex,
+      //Rcpp::Named("votingSessionId") = votingSessionId,
       //Rcpp::Named("uniqueVotingIdentifer") = uniqueVotingIdentifer,
       Rcpp::Named("isCurrent") = isCurrent,
       Rcpp::Named("cardId") = cardId,

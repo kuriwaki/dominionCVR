@@ -7,3 +7,8 @@
 # 0.0.2 
 
 - Store Party and density together (#7)
+
+
+# 0.0.3 
+
+- Store "sessionIndex"
