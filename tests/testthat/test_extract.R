@@ -1,6 +1,7 @@
 library(jsonlite)
 
-cvr <- fromJSON("../../data-raw/json/CvrExport_24940.json", simplifyDataFrame = FALSE)
+cvr <- fromJSON(readLines("../../data-raw/json/CvrExport_24940.json", warn = FALSE),
+                simplifyDataFrame = FALSE)
 
 
 test_that("Internal Extract functions run as intended",
