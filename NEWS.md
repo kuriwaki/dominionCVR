@@ -12,3 +12,7 @@
 # 0.0.3 
 
 - Store "sessionIndex"
+
+# 0.0.4
+
+- Update MIT License add make tests robust
