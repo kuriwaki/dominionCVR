@@ -6,6 +6,9 @@
 **Shiro Kuriwaki** and **Jeff Lewis**
 
 <!-- badges: start -->
+
+[![License:
+MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
 
 Dominion voting machines, used in many places such as Arizona, Orange
@@ -41,26 +44,26 @@ Currently there is a simple function to read from a JSON file:
 ``` r
 extract_cvr(path = "data-raw/json/CvrExport_42.json") |> 
   as_tibble()
-#> 0.082 sec elapsed
+#> 0.036 sec elapsed
 #> # A tibble: 1,216 × 22
-#>    originalMod…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batchId recor…⁶ count…⁷ sessi…⁸
-#>    <chr>         <chr>     <int>   <int>   <int>   <int>   <int>   <int>   <int>
-#>  1 Original      Scanne…     157      51      21      20      88       2       0
-#>  2 Original      Scanne…     157      51      21      20      88       2       0
-#>  3 Original      Scanne…     157      51      21      20      88       2       0
-#>  4 Original      Scanne…     157      51      21      20      88       2       0
-#>  5 Original      Scanne…     157      51      21      20      88       2       0
-#>  6 Original      Scanne…     157      51      21      20      88       2       0
-#>  7 Original      Scanne…     157      51      21      20      88       2       0
-#>  8 Original      Scanne…     157      51      21      20      88       2       0
-#>  9 Original      Scanne…     157      51      21      20      88       2       0
-#> 10 Original      Scanne…     157      51      21      20      88       2       0
-#> # … with 1,206 more rows, 13 more variables: isCurrent <lgl>, cardId <int>,
-#> #   paperIndex <int>, contestId <int>, overvotes <int>, undervotes <int>,
-#> #   candidateId <int>, partyId <int>, rank <int>, isVote <lgl>, file <chr>,
-#> #   isAmbiguous <lgl>, mdens <dbl>, and abbreviated variable names
-#> #   ¹​originalModified, ²​sessionType, ³​precinctPortionId, ⁴​ballotTypeId,
-#> #   ⁵​tabulatorId, ⁶​recordId, ⁷​countingGroupId, ⁸​sessionIndex
+#>    originalModified sessionType precinctPortionId ballotTypeId tabulatorId
+#>    <chr>            <chr>                   <int>        <int>       <int>
+#>  1 Original         ScannedVote               157           51          21
+#>  2 Original         ScannedVote               157           51          21
+#>  3 Original         ScannedVote               157           51          21
+#>  4 Original         ScannedVote               157           51          21
+#>  5 Original         ScannedVote               157           51          21
+#>  6 Original         ScannedVote               157           51          21
+#>  7 Original         ScannedVote               157           51          21
+#>  8 Original         ScannedVote               157           51          21
+#>  9 Original         ScannedVote               157           51          21
+#> 10 Original         ScannedVote               157           51          21
+#> # ℹ 1,206 more rows
+#> # ℹ 17 more variables: batchId <int>, recordId <int>, countingGroupId <int>,
+#> #   sessionIndex <int>, isCurrent <lgl>, cardId <int>, paperIndex <int>,
+#> #   contestId <int>, overvotes <int>, undervotes <int>, candidateId <int>,
+#> #   partyId <int>, rank <int>, isVote <lgl>, file <chr>, isAmbiguous <lgl>,
+#> #   mdens <dbl>
 ```
 
 It can read multiple files at the same time and run in multicore
@@ -69,37 +72,43 @@ settings
 ``` r
 library(furrr)
 #> Loading required package: future
+```
+
+``` r
 plan("multicore")
 #> Warning in supportsMulticoreAndRStudio(...): [ONE-TIME WARNING] Forked
 #> processing ('multicore') is not supported when running R from RStudio because
 #> it is considered unstable. For more details, how to control forked processing
 #> or not, and how to silence this warning in future R sessions, see
 #> ?parallelly::supportsMulticore
+```
+
+``` r
 extract_cvr(path = c("data-raw/json/CvrExport_42.json",
                      "data-raw/json/CvrExport_24940.json",
                      "data-raw/json/CvrExport_AZ-999.json"
                      )) |> 
   as_tibble()
-#> 0.069 sec elapsed
+#> 0.042 sec elapsed
 #> # A tibble: 5,011 × 22
-#>    originalMod…¹ sessi…² preci…³ ballo…⁴ tabul…⁵ batchId recor…⁶ count…⁷ sessi…⁸
-#>    <chr>         <chr>     <int>   <int>   <int>   <int>   <int>   <int>   <int>
-#>  1 Original      Scanne…     157      51      21      20      88       2       0
-#>  2 Original      Scanne…     157      51      21      20      88       2       0
-#>  3 Original      Scanne…     157      51      21      20      88       2       0
-#>  4 Original      Scanne…     157      51      21      20      88       2       0
-#>  5 Original      Scanne…     157      51      21      20      88       2       0
-#>  6 Original      Scanne…     157      51      21      20      88       2       0
-#>  7 Original      Scanne…     157      51      21      20      88       2       0
-#>  8 Original      Scanne…     157      51      21      20      88       2       0
-#>  9 Original      Scanne…     157      51      21      20      88       2       0
-#> 10 Original      Scanne…     157      51      21      20      88       2       0
-#> # … with 5,001 more rows, 13 more variables: isCurrent <lgl>, cardId <int>,
-#> #   paperIndex <int>, contestId <int>, overvotes <int>, undervotes <int>,
-#> #   candidateId <int>, partyId <int>, rank <int>, isVote <lgl>, file <chr>,
-#> #   isAmbiguous <lgl>, mdens <dbl>, and abbreviated variable names
-#> #   ¹​originalModified, ²​sessionType, ³​precinctPortionId, ⁴​ballotTypeId,
-#> #   ⁵​tabulatorId, ⁶​recordId, ⁷​countingGroupId, ⁸​sessionIndex
+#>    originalModified sessionType precinctPortionId ballotTypeId tabulatorId
+#>    <chr>            <chr>                   <int>        <int>       <int>
+#>  1 Original         ScannedVote               157           51          21
+#>  2 Original         ScannedVote               157           51          21
+#>  3 Original         ScannedVote               157           51          21
+#>  4 Original         ScannedVote               157           51          21
+#>  5 Original         ScannedVote               157           51          21
+#>  6 Original         ScannedVote               157           51          21
+#>  7 Original         ScannedVote               157           51          21
+#>  8 Original         ScannedVote               157           51          21
+#>  9 Original         ScannedVote               157           51          21
+#> 10 Original         ScannedVote               157           51          21
+#> # ℹ 5,001 more rows
+#> # ℹ 17 more variables: batchId <int>, recordId <int>, countingGroupId <int>,
+#> #   sessionIndex <int>, isCurrent <lgl>, cardId <int>, paperIndex <int>,
+#> #   contestId <int>, overvotes <int>, undervotes <int>, candidateId <int>,
+#> #   partyId <int>, rank <int>, isVote <lgl>, file <chr>, isAmbiguous <lgl>,
+#> #   mdens <dbl>
 ```
 
 ## Inside CVR Exports
@@ -144,6 +153,9 @@ Each card includes contests. Here we take the 49th card.
 ``` r
 length(cvr$Sessions$Original$Cards)
 #> [1] 118
+```
+
+``` r
 
 # First card
 cvr$Sessions$Original$Cards[[49]] %>% str(max.level = 2)
@@ -198,21 +210,21 @@ votes <- cvr$Sessions$Original$Cards[[49]]$Contests[[1]]$Marks %>%
 
 as_tibble(votes)
 #> # A tibble: 12 × 8
-#>    CandidateId ManifestationId PartyId  Rank MarkDensity IsAmbi…¹ IsVote Outst…²
-#>          <int>           <int>   <int> <int>       <int> <lgl>    <lgl>  <list> 
-#>  1          59          284046       0     1         100 FALSE    TRUE   <list> 
-#>  2         116          284054       1     1          97 FALSE    TRUE   <list> 
-#>  3         115          284055       1     1          92 FALSE    TRUE   <list> 
-#>  4         113          284058       1     1          90 FALSE    TRUE   <list> 
-#>  5          11          284059       0     1          99 FALSE    TRUE   <list> 
-#>  6          10          284062       0     1         100 FALSE    TRUE   <list> 
-#>  7          14          284064       0     1          96 FALSE    TRUE   <list> 
-#>  8           7          284066       0     1          95 FALSE    TRUE   <list> 
-#>  9          52          284076       0     1         100 FALSE    TRUE   <list> 
-#> 10          50          284077       0     1          98 FALSE    TRUE   <list> 
-#> 11          49          284080       0     1          98 FALSE    TRUE   <list> 
-#> 12          51          284083       0     1          96 FALSE    TRUE   <list> 
-#> # … with abbreviated variable names ¹​IsAmbiguous, ²​OutstackConditionIds
+#>    CandidateId ManifestationId PartyId  Rank MarkDensity IsAmbiguous IsVote
+#>          <int>           <int>   <int> <int>       <int> <lgl>       <lgl> 
+#>  1          59          284046       0     1         100 FALSE       TRUE  
+#>  2         116          284054       1     1          97 FALSE       TRUE  
+#>  3         115          284055       1     1          92 FALSE       TRUE  
+#>  4         113          284058       1     1          90 FALSE       TRUE  
+#>  5          11          284059       0     1          99 FALSE       TRUE  
+#>  6          10          284062       0     1         100 FALSE       TRUE  
+#>  7          14          284064       0     1          96 FALSE       TRUE  
+#>  8           7          284066       0     1          95 FALSE       TRUE  
+#>  9          52          284076       0     1         100 FALSE       TRUE  
+#> 10          50          284077       0     1          98 FALSE       TRUE  
+#> 11          49          284080       0     1          98 FALSE       TRUE  
+#> 12          51          284083       0     1          96 FALSE       TRUE  
+#> # ℹ 1 more variable: OutstackConditionIds <list>
 ```
 
 Here we finally get to the real part. `IsVote = TRUE` means that the
@@ -230,10 +242,6 @@ cand_df <- cont_df %>%
   select(ContestDescription, ContestId) %>% 
   left_join(fromJSON("data-raw/json/CandidateManifest.json")$List, by = "ContestId") %>% 
   as_tibble()
-#> Warning in left_join(., fromJSON("data-raw/json/CandidateManifest.json")$List, : Each row in `x` is expected to match at most 1 row in `y`.
-#> ℹ Row 1 of `x` matches multiple rows.
-#> ℹ If multiple matches are expected, set `multiple = "all"` to silence this
-#>   warning.
 ```
 
 ``` r
@@ -248,22 +256,22 @@ votes %>%
   relocate(contest, candidate, IsVote) %>% 
   as_tibble()
 #> # A tibble: 12 × 10
-#>    contest  candi…¹ IsVote Candi…² Manif…³ PartyId  Rank MarkD…⁴ IsAmb…⁵ Outst…⁶
-#>    <chr>    <chr>   <lgl>    <int>   <int>   <int> <int>   <int> <lgl>   <list> 
-#>  1 PRESIDE… JOSEPH… TRUE        59  284046       0     1     100 FALSE   <list> 
-#>  2 US Hous… NANCY … TRUE       116  284054       1     1      97 FALSE   <list> 
-#>  3 State S… SCOTT … TRUE       115  284055       1     1      92 FALSE   <list> 
-#>  4 STATE A… PHIL T… TRUE       113  284058       1     1      90 FALSE   <list> 
-#>  5 BOARD O… KEVINE… TRUE        11  284059       0     1      99 FALSE   <list> 
-#>  6 BOARD O… JENNY … TRUE        10  284062       0     1     100 FALSE   <list> 
-#>  7 BOARD O… MICHEL… TRUE        14  284064       0     1      96 FALSE   <list> 
-#>  8 BOARD O… ALIDA … TRUE         7  284066       0     1      95 FALSE   <list> 
-#>  9 COMMUNI… TOM TE… TRUE        52  284076       0     1     100 FALSE   <list> 
-#> 10 COMMUNI… MARIE … TRUE        50  284077       0     1      98 FALSE   <list> 
-#> 11 COMMUNI… JEANET… TRUE        49  284080       0     1      98 FALSE   <list> 
-#> 12 COMMUNI… SHANEL… TRUE        51  284083       0     1      96 FALSE   <list> 
-#> # … with abbreviated variable names ¹​candidate, ²​CandidateId, ³​ManifestationId,
-#> #   ⁴​MarkDensity, ⁵​IsAmbiguous, ⁶​OutstackConditionIds
+#>    contest            candidate IsVote CandidateId ManifestationId PartyId  Rank
+#>    <chr>              <chr>     <lgl>        <int>           <int>   <int> <int>
+#>  1 PRESIDENT AND VIC… JOSEPH R… TRUE            59          284046       0     1
+#>  2 US House of Rep D… NANCY PE… TRUE           116          284054       1     1
+#>  3 State Senator Dis… SCOTT WI… TRUE           115          284055       1     1
+#>  4 STATE ASSEMBLY ME… PHIL TING TRUE           113          284058       1     1
+#>  5 BOARD OF EDUCATION KEVINE B… TRUE            11          284059       0     1
+#>  6 BOARD OF EDUCATION JENNY LAM TRUE            10          284062       0     1
+#>  7 BOARD OF EDUCATION MICHELLE… TRUE            14          284064       0     1
+#>  8 BOARD OF EDUCATION ALIDA FI… TRUE             7          284066       0     1
+#>  9 COMMUNITY COLLEGE… TOM TEMP… TRUE            52          284076       0     1
+#> 10 COMMUNITY COLLEGE… MARIE HU… TRUE            50          284077       0     1
+#> 11 COMMUNITY COLLEGE… JEANETTE… TRUE            49          284080       0     1
+#> 12 COMMUNITY COLLEGE… SHANELL … TRUE            51          284083       0     1
+#> # ℹ 3 more variables: MarkDensity <int>, IsAmbiguous <lgl>,
+#> #   OutstackConditionIds <list>
 ```
 
 ## Inside Manifest Files
@@ -289,7 +297,10 @@ and can extract from a zip file too.
 #>  8            1        17
 #>  9            1        18
 #> 10            1        19
-#> # … with 2,452 more rows
+#> # ℹ 2,452 more rows
+```
+
+``` r
  read_manifest("data-raw/json/BallotTypeManifest.json")
 #> # A tibble: 96 × 3
 #>    Description       Id ExternalId
@@ -304,45 +315,55 @@ and can extract from a zip file too.
 #>  8 Ballot Type 19     8 19        
 #>  9 Ballot Type 16     9 16        
 #> 10 Ballot Type 18    10 18        
-#> # … with 86 more rows
+#> # ℹ 86 more rows
+```
+
+``` r
  read_manifest("data-raw/json/CandidateManifest.json")
 #> # A tibble: 139 × 6
-#>    Description                                  Id Exter…¹ Conte…² Type  Disab…³
-#>    <chr>                                     <int> <chr>     <int> <chr>   <int>
-#>  1 "JOSEPH R. BIDEN AND KAMALA D. HARRIS"       59 ""            1 Regu…       0
-#>  2 "DONALD J. TRUMP AND MICHAEL R. PENCE"       54 ""            1 Regu…       0
-#>  3 "GLORIA LA RIVA AND SUNIL FREEMAN"           55 ""            1 Regu…       0
-#>  4 "ROQUE \"ROCKY\" DE LA FUENTE GUERRA AND…    56 ""            1 Regu…       0
-#>  5 "HOWIE HAWKINS AND ANGELA NICOLE WALKER"     57 ""            1 Regu…       0
-#>  6 "JO JORGENSEN AND JEREMY \"SPIKE\" COHEN"    58 ""            1 Regu…       0
-#>  7 "Write-in"                                  126 ""            1 Writ…       0
-#>  8 "BRIAN CARROLL AND AMAR PATEL"              133 ""            1 Qual…       0
-#>  9 "MARK CHARLES AND ADRIAN WALLACE"           134 ""            1 Qual…       0
-#> 10 "JOSEPH KISHORE AND NORISSA SANTA CRUZ"     135 ""            1 Qual…       0
-#> # … with 129 more rows, and abbreviated variable names ¹​ExternalId, ²​ContestId,
-#> #   ³​Disabled
+#>    Description                            Id ExternalId ContestId Type  Disabled
+#>    <chr>                               <int> <chr>          <int> <chr>    <int>
+#>  1 "JOSEPH R. BIDEN AND KAMALA D. HAR…    59 ""                 1 Regu…        0
+#>  2 "DONALD J. TRUMP AND MICHAEL R. PE…    54 ""                 1 Regu…        0
+#>  3 "GLORIA LA RIVA AND SUNIL FREEMAN"     55 ""                 1 Regu…        0
+#>  4 "ROQUE \"ROCKY\" DE LA FUENTE GUER…    56 ""                 1 Regu…        0
+#>  5 "HOWIE HAWKINS AND ANGELA NICOLE W…    57 ""                 1 Regu…        0
+#>  6 "JO JORGENSEN AND JEREMY \"SPIKE\"…    58 ""                 1 Regu…        0
+#>  7 "Write-in"                            126 ""                 1 Writ…        0
+#>  8 "BRIAN CARROLL AND AMAR PATEL"        133 ""                 1 Qual…        0
+#>  9 "MARK CHARLES AND ADRIAN WALLACE"     134 ""                 1 Qual…        0
+#> 10 "JOSEPH KISHORE AND NORISSA SANTA …   135 ""                 1 Qual…        0
+#> # ℹ 129 more rows
+```
+
+``` r
  read_manifest("data-raw/json/ContestManifest.json")
 #> # A tibble: 42 × 7
-#>    Description                        Id Exter…¹ Distr…² VoteFor NumOf…³ Disab…⁴
-#>    <chr>                           <int> <chr>     <int>   <int>   <int>   <int>
-#>  1 PRESIDENT AND VICE PRESIDENT        1 110         101       1       0       0
-#>  2 US House of Rep District 12         2 1020        102       1       0       0
-#>  3 US House of Rep District 13         3 1030        103       1       0       0
-#>  4 US House of Rep District 14         4 1040        104       1       0       0
-#>  5 State Senator District 11           5 1130        105       1       0       0
-#>  6 STATE ASSEMBLY MEMBER District…     6 1310        106       1       0       0
-#>  7 STATE ASSEMBLY MEMBER District…     7 1210        107       1       0       0
-#>  8 BOARD OF EDUCATION                  8 6100        121       4       0       0
-#>  9 COMMUNITY COLLEGE BOARD             9 8530        121       4       0       0
-#> 10 BART DIRECTOR DISTRICT 7           10 6000        122       1       0       0
-#> # … with 32 more rows, and abbreviated variable names ¹​ExternalId, ²​DistrictId,
-#> #   ³​NumOfRanks, ⁴​Disabled
+#>    Description              Id ExternalId DistrictId VoteFor NumOfRanks Disabled
+#>    <chr>                 <int> <chr>           <int>   <int>      <int>    <int>
+#>  1 PRESIDENT AND VICE P…     1 110               101       1          0        0
+#>  2 US House of Rep Dist…     2 1020              102       1          0        0
+#>  3 US House of Rep Dist…     3 1030              103       1          0        0
+#>  4 US House of Rep Dist…     4 1040              104       1          0        0
+#>  5 State Senator Distri…     5 1130              105       1          0        0
+#>  6 STATE ASSEMBLY MEMBE…     6 1310              106       1          0        0
+#>  7 STATE ASSEMBLY MEMBE…     7 1210              107       1          0        0
+#>  8 BOARD OF EDUCATION        8 6100              121       4          0        0
+#>  9 COMMUNITY COLLEGE BO…     9 8530              121       4          0        0
+#> 10 BART DIRECTOR DISTRI…    10 6000              122       1          0        0
+#> # ℹ 32 more rows
+```
+
+``` r
  read_manifest("data-raw/json/CountingGroupManifest.json")
 #> # A tibble: 2 × 3
 #>   Description     Id ExternalId
 #>   <chr>        <int> <chr>     
 #> 1 Election Day     1 ""        
 #> 2 Vote by Mail     2 ""
+```
+
+``` r
  read_manifest("data-raw/json/DistrictManifest.json")
 #> # A tibble: 50 × 4
 #>    Description     Id DistrictTypeId                       ExternalId
@@ -357,7 +378,10 @@ and can extract from a zip file too.
 #>  8 19TH ASMBLY    107 90ddf079-3ab8-4d2a-8df2-1220072c93b5 "ASM019"  
 #>  9 BD EQ,DIST2    108 aa7f3fd3-9095-4008-95a5-90a4dd6d536d "BOE002"  
 #> 10 County Wide    109 b6746389-47c1-46bc-b30c-212a8a794a3a "SF"      
-#> # … with 40 more rows
+#> # ℹ 40 more rows
+```
+
+``` r
  read_manifest("data-raw/json/DistrictPrecinctPortionManifest.json")
 #> # A tibble: 6,432 × 2
 #>    DistrictId PrecinctPortionId
@@ -372,7 +396,10 @@ and can extract from a zip file too.
 #>  8        150                 8
 #>  9        150                 9
 #> 10        150                10
-#> # … with 6,422 more rows
+#> # ℹ 6,422 more rows
+```
+
+``` r
  read_manifest("data-raw/json/DistrictTypeManifest.json")
 #> # A tibble: 11 × 3
 #>    Description                   Id                                   ExternalId
@@ -388,13 +415,17 @@ and can extract from a zip file too.
 #>  9 City                          8b84f173-4ca1-411e-88d6-319b3a9ebeaf ""        
 #> 10 BART                          6a75922c-fd82-4618-8694-c1137e695c6f ""        
 #> 11 Neighborhood                  253b928c-aa6d-4d90-9d65-9c0080f6edcd ""
+```
+
+``` r
  read_manifest("data-raw/json/ElectionEventManifest.json")
 #> # A tibble: 1 × 6
-#>   Description                                 Id Exter…¹ Juris…² Elect…³ Elect…⁴
-#>   <chr>                                    <int> <chr>   <chr>   <chr>   <list> 
-#> 1 San Francisco Consolidated General Elec…     1 ""      San Fr… 202011… <int>  
-#> # … with abbreviated variable names ¹​ExternalId, ²​Jurisdiction, ³​ElectionDate,
-#> #   ⁴​ElectionSignature
+#>   Description          Id ExternalId Jurisdiction ElectionDate ElectionSignature
+#>   <chr>             <int> <chr>      <chr>        <chr>        <list>           
+#> 1 San Francisco Co…     1 ""         San Francis… 20201103     <int [32]>
+```
+
+``` r
  read_manifest("data-raw/json/OutstackConditionManifest.json")
 #> # A tibble: 12 × 2
 #>    Description                Id
@@ -411,6 +442,9 @@ and can extract from a zip file too.
 #> 10 DuplicatedRcvCandidate     12
 #> 11 UnvotedRcvContest          13
 #> 12 UnusedRanking              14
+```
+
+``` r
  read_manifest("data-raw/json/PartyManifest.json")
 #> # A tibble: 8 × 3
 #>   Description                       Id ExternalId
@@ -423,6 +457,9 @@ and can extract from a zip file too.
 #> 6 Green                              6 ""        
 #> 7 No Party Preference                7 ""        
 #> 8 Non-Partisan (System Use Only)     8 ""
+```
+
+``` r
  read_manifest("data-raw/json/PrecinctManifest.json")
 #> # A tibble: 609 × 3
 #>    Description      Id ExternalId
@@ -437,7 +474,10 @@ and can extract from a zip file too.
 #>  8 PCT 1109          8 1109-2    
 #>  9 PCT 1111          9 1111-2    
 #> 10 PCT 1112         10 1112-2    
-#> # … with 599 more rows
+#> # ℹ 599 more rows
+```
+
+``` r
  read_manifest("data-raw/json/PrecinctPortionManifest.json")
 #> # A tibble: 609 × 4
 #>    Description      Id ExternalId PrecinctId
@@ -452,22 +492,25 @@ and can extract from a zip file too.
 #>  8 PCT 1109          8 1109-2              8
 #>  9 PCT 1111          9 1111-2              9
 #> 10 PCT 1112         10 1112-2             10
-#> # … with 599 more rows
+#> # ℹ 599 more rows
+```
+
+``` r
  read_manifest("data-raw/json/TabulatorManifest.json")
 #> # A tibble: 1,246 × 10
-#>    Descrip…¹    Id Votin…² Votin…³ Exter…⁴ Type  Thres…⁵ Thres…⁶ Write…⁷ Write…⁸
-#>    <chr>     <int>   <int> <chr>   <chr>   <chr>   <int>   <int>   <int>   <int>
-#>  1 ICC01 El…     1       1 City H… ""      Imag…       5      25       5      25
-#>  2 ICC02 El…     2       1 City H… ""      Imag…       5      25       5      25
-#>  3 ICC03 El…     3       1 City H… ""      Imag…       5      25       5      25
-#>  4 ICC04 El…     4       1 City H… ""      Imag…       5      25       5      25
-#>  5 ICC05 El…     5       1 City H… ""      Imag…       5      25       5      25
-#>  6 ICC06 El…     6       1 City H… ""      Imag…       5      25       5      25
-#>  7 ICC07 El…     7       1 City H… ""      Imag…       5      25       5      25
-#>  8 ICC08 El…     8       1 City H… ""      Imag…       5      25       5      25
-#>  9 ICC09 El…     9       1 City H… ""      Imag…       5      25       5      25
-#> 10 ICC10 El…    10       1 City H… ""      Imag…       5      25       5      25
-#> # … with 1,236 more rows, and abbreviated variable names ¹​Description,
-#> #   ²​VotingLocationNumber, ³​VotingLocationName, ⁴​ExternalId, ⁵​ThresholdMin,
-#> #   ⁶​ThresholdMax, ⁷​WriteThresholdMin, ⁸​WriteThresholdMax
+#>    Description       Id VotingLocationNumber VotingLocationName ExternalId Type 
+#>    <chr>          <int>                <int> <chr>              <chr>      <chr>
+#>  1 ICC01 Electio…     1                    1 City Hall          ""         Imag…
+#>  2 ICC02 Electio…     2                    1 City Hall          ""         Imag…
+#>  3 ICC03 Electio…     3                    1 City Hall          ""         Imag…
+#>  4 ICC04 Electio…     4                    1 City Hall          ""         Imag…
+#>  5 ICC05 Electio…     5                    1 City Hall          ""         Imag…
+#>  6 ICC06 Electio…     6                    1 City Hall          ""         Imag…
+#>  7 ICC07 Electio…     7                    1 City Hall          ""         Imag…
+#>  8 ICC08 Electio…     8                    1 City Hall          ""         Imag…
+#>  9 ICC09 Electio…     9                    1 City Hall          ""         Imag…
+#> 10 ICC10 Electio…    10                    1 City Hall          ""         Imag…
+#> # ℹ 1,236 more rows
+#> # ℹ 4 more variables: ThresholdMin <int>, ThresholdMax <int>,
+#> #   WriteThresholdMin <int>, WriteThresholdMax <int>
 ```

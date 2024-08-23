@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 **Shiro Kuriwaki** and **Jeff Lewis**
 
 <!-- badges: start -->
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <!-- badges: end -->
 
 Dominion voting machines, used in many places such as Arizona, Orange County, CA, and San Francisco Couty, CA, export their cast vote records in JSON format. This R package provides a common interface to read such data files into tabular form. 

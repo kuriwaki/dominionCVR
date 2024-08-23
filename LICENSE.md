@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) 2021 dominionCVR authors
+Copyright (c) 2024 Shiro Kuriwaki and Jeffrey Lewis 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
