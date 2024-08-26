@@ -47,8 +47,8 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
     std::vector<int> recordId(max_marks);
     std::vector<int> countingGroupId(max_marks);
     std::vector<int> sessionIndex(max_marks);
-    std::vector<std::string> votingSessionId(max_marks);
-    std::vector<std::string> uniqueVotingIdentifer(max_marks);
+    // std::vector<std::string> votingSessionId(max_marks);
+    // std::vector<std::string> uniqueVotingIdentifer(max_marks);
     std::vector<bool> isCurrent(max_marks);
     std::vector<int> cardId(max_marks);
     std::vector<int> paperIndex(max_marks);
@@ -103,8 +103,8 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
                   recordId[mark_no] = Rf_isNull(session["RecordId"]) ? -1 : session["RecordId"];
                   countingGroupId[mark_no] = session["CountingGroupId"];
                   sessionIndex[mark_no] = i;
-                  votingSessionId[mark_no] = (const char *) session["VotingSessionIdentifier"];
-                  uniqueVotingIdentifer[mark_no] = (const char *) session["UniqueVotingIdentifier"];
+                  // votingSessionId[mark_no] = (const char *) session["VotingSessionIdentifier"];
+                  // uniqueVotingIdentifer[mark_no] = (const char *) session["UniqueVotingIdentifier"];
                   isCurrent[mark_no] = (bool) orig_mod["IsCurrent"];
                   cardId[mark_no] = card["Id"];
                   paperIndex[mark_no] = card["PaperIndex"];
@@ -135,8 +135,8 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
     recordId.resize(mark_no);
     countingGroupId.resize(mark_no);
     sessionIndex.resize(mark_no);
-    votingSessionId.resize(mark_no);
-    uniqueVotingIdentifer.resize(mark_no);
+    // votingSessionId.resize(mark_no);
+    // uniqueVotingIdentifer.resize(mark_no);
     isCurrent.resize(mark_no);
     cardId.resize(mark_no);
     paperIndex.resize(mark_no);
