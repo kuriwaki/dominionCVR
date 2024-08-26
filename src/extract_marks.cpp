@@ -66,8 +66,23 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
     Rcpp::List empty_mark = Rcpp::List::create();
     bool zero_marks = false;
     int mark_no = 0;
+
+    const char * vsi;
+    const char * uvi;
+
     for (int i=0; i<sessions.length(); i++) {
       Rcpp::List session=sessions[i];
+
+      // Check if identifiers are omitted from the file.  Ultimately, there
+      // aren't returned even if they are there, so they could just be left
+      // unextracted when present.
+      vsi = session.containsElementNamed("VotingSessionIdentifier") ?
+             (const char *) session("VotingSessionIdentifier") :
+            "NULL";
+      uvi = session.containsElementNamed("UniqueVotingIdentifier") ?
+            (const char *) session("UniqueVotingIdentifier") :
+            "NULL";
+
       for (int n=0; n<2; n++) {
         const char * om = origMod[n];
         if (session.containsElementNamed(om)) {
@@ -103,8 +118,8 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
                   recordId[mark_no] = Rf_isNull(session["RecordId"]) ? -1 : session["RecordId"];
                   countingGroupId[mark_no] = session["CountingGroupId"];
                   sessionIndex[mark_no] = i;
-                  votingSessionId[mark_no] = (const char *) session["VotingSessionIdentifier"];
-                  uniqueVotingIdentifer[mark_no] = (const char *) session["UniqueVotingIdentifier"];
+                  votingSessionId[mark_no] = vsi; // (const char *) session["VotingSessionIdentifier"];
+                  uniqueVotingIdentifer[mark_no] = uvi; // (const char *) session["UniqueVotingIdentifier"];
                   isCurrent[mark_no] = (bool) orig_mod["IsCurrent"];
                   cardId[mark_no] = card["Id"];
                   paperIndex[mark_no] = card["PaperIndex"];
