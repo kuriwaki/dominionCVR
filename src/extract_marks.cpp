@@ -76,10 +76,12 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
       // Check if identifiers are omitted from the file.  Ultimately, there
       // aren't returned even if they are there, so they could just be left
       // unextracted when present.
-      vsi = session.containsElementNamed("VotingSessionIdentifier") ?
+      vsi = (session.containsElementNamed("VotingSessionIdentifier") &&
+             session["VotingSessionIdentifier"] != R_NilValue) ?
              (const char *) session("VotingSessionIdentifier") :
             "NULL";
-      uvi = session.containsElementNamed("UniqueVotingIdentifier") ?
+      uvi = (session.containsElementNamed("UniqueVotingIdentifier") &&
+             session["UniqueVotingIdentifier"] != R_NilValue)?
             (const char *) session("UniqueVotingIdentifier") :
             "NULL";
 
