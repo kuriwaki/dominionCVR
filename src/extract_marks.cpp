@@ -64,7 +64,6 @@ int count_marks(Rcpp::List sessions) {
 
    Rcpp::List mark;
    Rcpp::List empty_mark = Rcpp::List::create();
-   bool zero_marks = false;
    int mark_no = 0;
 
    const char * vsi;
@@ -98,6 +97,7 @@ int count_marks(Rcpp::List sessions) {
              Rcpp::List contest = contests[k];
              Rcpp::List marks = contest["Marks"];
             //  zero_marks = marks.length() == 0;
+            bool zero_marks = false;
 
              // Check `Marks` for zero or "Redacted"
              if (marks.length() == 0) {
