@@ -15,4 +15,4 @@
 
 # 0.0.4
 
-- Update MIT License add make tests robust
+- Add handling of REDACTED marks
