@@ -64,7 +64,6 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
 
     Rcpp::List mark;
     Rcpp::List empty_mark = Rcpp::List::create();
-    bool zero_marks = false;
     int mark_no = 0;
 
     const char * vsi;
@@ -97,7 +96,23 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
               for (int k=0; k<contests.length(); k++) {
                 Rcpp::List contest = contests[k];
                 Rcpp::List marks = contest["Marks"];
-                zero_marks = marks.length() == 0;
+
+                // Check `Marks` for zero or "Redacted"
+                bool zero_marks = false;
+                if (marks.length() == 0) {
+                  zero_marks = true; // Empty list
+                } else if (marks.length() == 1) {
+                  // Check if the single element is "*** REDACTED ***"
+                  Rcpp::RObject first_element = marks[0];
+                  if (Rf_isString(first_element)) {
+                    std::string element_str = Rcpp::as<std::string>(first_element);
+
+                    if (element_str == "*** REDACTED ***") {
+                      zero_marks = true;
+                    }
+                  }
+                }
+
                 for (int m=0; zero_marks | (m<marks.length()); m++) {
                   if (mark_no == max_marks) {
                     int tot_marks = count_marks(sessions);
@@ -126,8 +141,8 @@ Rcpp::DataFrame extract_marks(Rcpp::List sessions, int max_marks) {
                   cardId[mark_no] = card["Id"];
                   paperIndex[mark_no] = card["PaperIndex"];
                   contestId[mark_no] = contest["Id"];
-                  overvotes[mark_no] = contest["Overvotes"];
-                  undervotes[mark_no] = contest["Undervotes"];
+                  overvotes[mark_no] = Rf_isString(contest["Overvotes"]) ? -1 : contest["Overvotes"];
+                  undervotes[mark_no] = Rf_isString(contest["Undervotes"]) ? -1 : contest["Undervotes"];
                   candidateId[mark_no] = zero_marks ? -1 : mark["CandidateId"];
                   partyId[mark_no] = (zero_marks | !mark.containsElementNamed("PartyId")) ? -1 : mark["PartyId"];
                   rank[mark_no] = zero_marks ? -1 : mark["Rank"];
