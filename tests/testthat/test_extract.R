@@ -1,8 +1,10 @@
 library(jsonlite)
 
-cvr <- fromJSON(readLines("../../data-raw/json/CvrExport_24940.json", warn = FALSE),
-                simplifyDataFrame = FALSE)
-
+cvr <- fromJSON(
+  readLines(
+    testthat::test_path("../../data-raw/json/CvrExport_24940.json"),
+    warn = FALSE),
+  simplifyDataFrame = FALSE)
 
 test_that("Internal Extract functions run as intended",
           {
@@ -27,4 +29,12 @@ test_that("Rcpp extract run as intended",
             sess0 <- cvr$Sessions[1]
             out_marks <- extract_marks(sess0, max_marks = 1e5)
             expect_equal(nrow(out_marks), 38)
+          })
+
+
+test_that("Redacted cvr is parsable",
+          {
+            expect_no_error(
+              extract_cvr(test_path("../../data-raw/json/redacted_CvrExport_1051.json"))
+            )
           })
